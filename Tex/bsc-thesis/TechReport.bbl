@@ -1,0 +1,127 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.1 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nyt/global//global/global}
+    \entry{AbsilMahonySepulchre:2008}{book}{}
+      \name{author}{3}{}{%
+        {{hash=9a81fe9ad87cf630eb4a68e86949545d}{%
+           family={Absil},
+           familyi={A\bibinitperiod},
+           given={P.-A.},
+           giveni={P\bibinithyphendelim A\bibinitperiod}}}%
+        {{hash=557ac8b0d5f2ea79ae1c98d25604636a}{%
+           family={Mahony},
+           familyi={M\bibinitperiod},
+           given={R.},
+           giveni={R\bibinitperiod}}}%
+        {{hash=be08672e3c8f3c7924a7959ed79d990b}{%
+           family={Sepulchre},
+           familyi={S\bibinitperiod},
+           given={R.},
+           giveni={R\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {USA}%
+      }
+      \list{publisher}{1}{%
+        {Princeton University Press}%
+      }
+      \strng{namehash}{1f1256f65d32880733bbb23cd6f6b4ca}
+      \strng{fullhash}{1f1256f65d32880733bbb23cd6f6b4ca}
+      \strng{bibnamehash}{1f1256f65d32880733bbb23cd6f6b4ca}
+      \strng{authorbibnamehash}{1f1256f65d32880733bbb23cd6f6b4ca}
+      \strng{authornamehash}{1f1256f65d32880733bbb23cd6f6b4ca}
+      \strng{authorfullhash}{1f1256f65d32880733bbb23cd6f6b4ca}
+      \field{sortinit}{A}
+      \field{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Many problems in the sciences and engineering can be rephrased as optimization problems on matrix search spaces endowed with a so-called manifold structure. This book shows how to exploit the special structure of such problems to develop efficient numerical algorithms. It places careful emphasis on both the numerical formulation of the algorithm and its differential geometric abstraction--illustrating how good algorithms draw equally from the insights of differential geometry, optimization, and numerical analysis. Two more theoretical chapters provide readers with the background in differential geometry necessary to algorithmic development. In the other chapters, several well-known optimization methods such as steepest descent and conjugate gradients are generalized to abstract manifolds. The book provides a generic development of each of these methods, building upon the material of the geometric chapters. It then guides readers through the calculations that turn these geometrically formulated methods into concrete numerical algorithms. The state-of-the-art algorithms given as examples are competitive with the best existing algorithms for a selection of eigenspace problems in numerical linear algebra. Optimization Algorithms on Matrix Manifolds offers techniques with broad applications in linear algebra, signal processing, data mining, computer vision, and statistical analysis. It can serve as a graduate-level textbook and will be of interest to applied mathematicians, engineers, and computer scientists.}
+      \field{isbn}{0691132984}
+      \field{title}{Optimization Algorithms on Matrix Manifolds}
+      \field{year}{2007}
+    \endentry
+    \entry{Gabay:1982}{article}{}
+      \name{author}{1}{}{%
+        {{hash=fad62431ef39c3d9dd9f6e06bf3e849b}{%
+           family={Gabay},
+           familyi={G\bibinitperiod},
+           given={Daniel},
+           giveni={D\bibinitperiod}}}%
+      }
+      \strng{namehash}{fad62431ef39c3d9dd9f6e06bf3e849b}
+      \strng{fullhash}{fad62431ef39c3d9dd9f6e06bf3e849b}
+      \strng{bibnamehash}{fad62431ef39c3d9dd9f6e06bf3e849b}
+      \strng{authorbibnamehash}{fad62431ef39c3d9dd9f6e06bf3e849b}
+      \strng{authornamehash}{fad62431ef39c3d9dd9f6e06bf3e849b}
+      \strng{authorfullhash}{fad62431ef39c3d9dd9f6e06bf3e849b}
+      \field{sortinit}{G}
+      \field{sortinithash}{62eb2aa29549e4fdbd3cb154ec5711cb}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Optimization Theory and Applications}
+      \field{month}{06}
+      \field{title}{Minimizing a differentiable function over a differential manifold}
+      \field{volume}{37}
+      \field{year}{1982}
+      \verb{doi}
+      \verb 10.1007/BF00934767
+      \endverb
+    \endentry
+    \entry{Huang:2013}{thesis}{}
+      \name{author}{1}{}{%
+        {{hash=e52bd36b901ec7fa10049d5d7e9876cf}{%
+           family={Huang},
+           familyi={H\bibinitperiod},
+           given={Wen},
+           giveni={W\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Florida State University}%
+      }
+      \strng{namehash}{e52bd36b901ec7fa10049d5d7e9876cf}
+      \strng{fullhash}{e52bd36b901ec7fa10049d5d7e9876cf}
+      \strng{bibnamehash}{e52bd36b901ec7fa10049d5d7e9876cf}
+      \strng{authorbibnamehash}{e52bd36b901ec7fa10049d5d7e9876cf}
+      \strng{authornamehash}{e52bd36b901ec7fa10049d5d7e9876cf}
+      \strng{authorfullhash}{e52bd36b901ec7fa10049d5d7e9876cf}
+      \field{sortinit}{H}
+      \field{sortinithash}{6db6145dae8dc9e1271a8d556090b50a}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Optimization Algorithms on Riemannian Manifolds with Applications}
+      \field{year}{2013}
+      \verb{urlraw}
+      \verb http://purl.flvc.org/fsu/fd/FSU_migr_etd-8809
+      \endverb
+      \verb{url}
+      \verb http://purl.flvc.org/fsu/fd/FSU_migr_etd-8809
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+
