@@ -1,0 +1,113 @@
+\section{Quasi-Newton Methods On Riemannian Manifolds}
+\label{Section4.2}
+
+In this section we try to generalize the most important points of Euclidean quasi-Newton methods to Riemannian manifolds in order to create a reasonable basis for deriving a Riemannian BFGS method. Quasi-Newton methods on Riemannian manifolds have been pursued for a long time, which are often obtained by generalizing their Euclidean counterparts, but the main focus so far has been on generalizing the BFGS method, which proved to be very efficient and practicable in the Euclidean case. Riemannian quasi-Newton methods follow the concept of the Riemannian Newton method (see e.g. \cite[p.~113]{AbsilMahonySepulchre:2008}), but instead of the Hessian operator $\operatorname{Hess} f(x_k)$ an approximation $\mathcal{H}_k \colon \; \tangent{x_k} \to \tangent{x_k}$ of it is used, which is updated in each iteration with information obtained during the iteration. The introduction of this class of Riemannian line search methods is also motivated by the fact that one avoids the computation of the Hessian operator and instead approximate it sufficiently well in each iteration, in order to minimize the computational effort. \\
+We have seen in \cref{Section2.2} that the realization of the quasi-Newton equation, \cref{quasi-NewtonEquation}, is the distinguishing feature of quasi-Newton methods. There are several possible generalizations of \cref{quasi-NewtonEquation} to a Riemannian manifold \cite[p.~17]{Huang:2013}. If we assume that Riemannian quasi-Newton methods use the iterative update scheme \cref{RiemannianIterativeUpdateScheme} with a fixed retraction, $\retractionSymbol$, and that the Riemannian manifold $(\mathcal{M}, g)$ is endowed with a vector transport, $\vectorTransportSymbol$, where the $\retractionSymbol$ is the associated retraction (see \cref{VectorTransport}), then the most obvious generalization of the Euclidean quasi-Newton equation, \cref{quasi-NewtonEquation}, on a Riemannian manifold $\mathcal{M}$ is
+\begin{equation}\label{RiemannianQuasi-NewtonEquation}
+    \mathcal{H}_{k+1} [\vectorTransportDir{x_k}{\alpha_k \eta_k}(\alpha_k \eta_k)] = \operatorname{grad} f(x_{k+1}) - \vectorTransportDir{x_k}{\alpha_k \eta_k}(\operatorname{grad} f(x_k)),
+\end{equation}
+where $\alpha_k \eta_k \in \tangent{x_k}$ is the update vector multiplied by a suitable stepsize $\alpha_k$ at the iterate $x_k$, i.e. $\retract{x_k}(\alpha_k \eta_k) = x_{k+1}$. If we generalize the additional requirements, which were assumed for $H_k$ in the Euclidean case, then one requires that the operator $\mathcal{H}_{k+1}$ is self-adjoint for all $k$, since the Hessian $\operatorname{Hess} f(x_{k+1})$ is a self-adjoint operator on $\tangent{x_{k+1}}$, and that the update formula should generate a positive definite operator $\mathcal{H}_{k+1}$ whenever $\mathcal{H}_k$ is positive definite \cite[p.~179]{AbsilMahonySepulchre:2008}. These are the absolute foundations by which in the Euclidean case quasi-Newton methods were identified, generalized to Riemannian manifolds. \\
+The problem is, that it is not clear whether \cref{RiemannianQuasi-NewtonEquation} is sufficient to create well-defined and convergent Riemannian quasi-Newton methods. This is due to the imprecise determination of the vector transport, $\vectorTransportSymbol$, needed to compare the tangent vectors $\alpha_k \eta_k, \operatorname{grad} f(x_k) \in \tangent{x_k}$ and $\operatorname{grad} f(x_{k+1}) \in \tangent{x_{k+1}}$, and the imprecise determination of the retraction, $\retractionSymbol$, needed to determine the next iterate. In \cref{Section3.4} these two concepts were presented and kept as general as possible, see \cref{Retraction} and \cref{VectorTransport}. There can be a variety of these two maps on a Riemannian manifold and each leads to a different definition of \cref{RiemannianQuasi-NewtonEquation}, which may influence the resulting method and its convergence behavior. This does not mean that \cref{RiemannianQuasi-NewtonEquation} is wrong, just to establish a Riemannian quasi-Newton method on it, conditions must be imposed on the choice of retraction and vector transport used in the method, so that clear statements can be made about the convergence of the resulting method. \\
+We present the most natural generalization of \cref{quasi-NewtonEquation}, which was first mentioned in \cite[p.~205]{Gabay:1982}. Therefore we assume in this section that on the Riemannian manifold $\mathcal{M}$ both exponential map, $\exp$, as retraction and parallel transport, $\parallelTransportSymbol$, as vector transport are available. We follow the same strategy as in \cref{Section2.2} but here we consider the pullback $\hat{f}_{x_k} = f \circ \expOp_{x_k} \colon \; \tangent{x_k} \to \mathbb{R}$ at the current iterate $x_k$. Since $\mathrm{D} \; \exponential{x_k}(0_{x_k}) = \id_{\tangent{x_k}}$ (see \cref{Retraction}), it follows that $\mathrm{D} \; f(x_k) = \mathrm{D} \; \hat{f}_{x_k}(0_{x_k})$, hence $\operatorname{grad} \hat{f}_{x_k} (0_{x_k}) = \operatorname{grad} f(x_k)$ \cite[p.~139]{AbsilMahonySepulchre:2008}. We create a quadratic model of $\hat{f}_{x_k}$ around the origin $0_{x_k}$ of $\tangent{x_k}$:
+\begin{equation*}
+    \begin{split}
+        \hat{m}_k(\xi_{x_k}) & = \hat{f}_{x_k} (0_{x_k}) + \mathrm{D} \; \hat{f}_{x_k} (0_{x_k}) [\xi_{x_k}] + \frac{1}{2} g_{x_k} (\xi_{x_k}, \mathcal{H}_k[\xi_{x_k}]) \\
+        & = f(x_k) + g_{x_k} (\xi_{x_k}, \operatorname{grad} \hat{f}_{x_k} (0_{x_k})) + \frac{1}{2} g_{x_k} (\xi_{x_k}, \mathcal{H}_k[\xi_{x_k}]) \\
+        & = f(x_k) + g_{x_k} (\xi_{x_k}, \operatorname{grad} f(x_k)) + \frac{1}{2} g_{x_k} (\xi_{x_k}, \mathcal{H}_k[\xi_{x_k}]).
+    \end{split}
+\end{equation*}
+The quadratic term is given by the self-adjoint positive definite operator $\mathcal{H}_k \colon \; \tangent{x_k} \to \tangent{x_k}$, i.e. $g_{x_k} (\mathcal{H}_{k} [\xi_{x_k}], \eta_{x_k}) = g_{x_k} (\xi_{x_k}, \mathcal{H}_{k} [\eta_{x_k}])$ holds for all $\xi_{x_k}, \eta_{x_k} \in \tangent{x_k}$ and $g_{x_k} (\mathcal{H}_{k} [\xi_{x_k}], \xi_{x_k}) > 0$ holds for all $\xi_{x_k} \in \tangent{x_k} \backslash 0_{x_k}$. The resulting model $\hat{m}_k \colon \; \tangent{x_k} \to \mathbb{R}$ is convex on $\tangent{x_k}$. As in the Euclidean case, the interpolation conditions 
+\begin{equation*}
+    \hat{m}_k(0_{x_k}) = \hat{f}_{x_k} (0_{x_k}) = f(x_k) \quad \text{and} \quad \nabla \hat{m}_k(0_{x_k}) = \operatorname{grad} \hat{f}_{x_k} (0_{x_k}) = \operatorname{grad} f(x_k)
+\end{equation*}
+hold and the minimizer $\eta_k$ of this model can explicitly be written as
+\begin{equation}\label{RiemannianDescentDirection}
+    \eta_k = -\mathcal{H}^{-1}_k [\operatorname{grad} f(x_k)] = -\mathcal{B}_k [\operatorname{grad} f(x_k)],
+\end{equation}
+where $\mathcal{B}_k \colon \; \tangent{x_k} \to \tangent{x_k}$ from now on will be the inverse of $\mathcal{H}_k$, which is also self-adjoint positive definite operator. In the Riemannian case a descent direction of a function $f \colon \; \mathcal{M} \to \mathbb{R}$ at a point $x \in \mathcal{M}$ denotes a tangent vector $\eta_x \in \tangent{x}$ with $g_x (\operatorname{grad} f(x), \eta_x) < 0$. This property ensures that the objective function $f$ indeed decreases along this search direction \cite[p.~5]{RingWirth:2012}. We can see that by the requirement to be positive definite for $\mathcal{B}_k$ and $\mathcal{H}_k$, this is true for $\eta_k$:
+\begin{equation*}
+    - g_{x_k} (\operatorname{grad} f(x_k), \mathcal{B}_k [\operatorname{grad} f(x_k)]) < 0.
+\end{equation*}
+Note that the computation of the search direction, \cref{RiemannianDescentDirection}, is the same in all Riemannian quasi-Newton methods and does not depend on the choice of retraction or vector transport. The next iterate is defined as 
+\begin{equation*}
+    x_{k+1} = \exponential{x_k}(\alpha_k \eta_k),
+\end{equation*}
+where $\alpha_k > 0$ is a stepsize appropriately chosen for $\eta_k$. As in the Euclidean case, we see that this is the decisive difference to the Riemannian Newton method, where $\eta_k = - {\operatorname{Hess} f(x_k)}^{-1}[\operatorname{grad} f(x_k)]$ is used as search direction (see e.g. \cite[p.~113]{AbsilMahonySepulchre:2008}). \\
+We again create a quadratic model of $\hat{f}_{x_{k+1}} = f \circ \expOp_{x_{k+1}}$ around the origin $0_{x_{k+1}}$ of $\tangent{x_{k+1}}$:
+\begin{equation*}
+    \hat{m}_{k+1}(\xi_{x_{k+1}}) = f(x_{k+1}) + g_{x_{k+1}} (\xi_{x_{k+1}}, \operatorname{grad} f(x_{k+1})) + \frac{1}{2} g_{x_{k+1}} (\xi_{x_{k+1}}, \mathcal{H}_{k+1}[\xi_{x_{k+1}}]).
+\end{equation*}
+In the Euclidean case, in order to take information from the previous iteration into account when determining the new $\spd$ matrix $H_k \in \mathbb{R}^{n \times n}$, it was required that the gradient of the model $\nabla m_{k+1}$ must match the gradient of the objective function $\nabla f$ at the latest two iterates $x_k$ and $x_{k+1}$. Of course we see that $\nabla \hat{m}_{k+1}(0_{x_{k+1}}) = \operatorname{grad} f(x_{k+1})$ holds. To be able to compare the gradient of the model $\nabla \hat{m}_{k+1} \colon \; \tangent{x_{k+1}} \to \tangent{x_{k+1}}$ with the gradient $\operatorname{grad} f(x_k)$ of the objective function defined in the tangent space $\tangent{x_k}$, we use the parallel transport, $\parallelTransportSymbol$, and evaluate the gradient of the model $\nabla \hat{m}_{k+1}$ at the tangent vector ${\expOp}^{-1}_{x_{k+1}}(x_k)$, which would bring us from the iterate $x_{k+1}$ to the iterate $x_k$ by using the exponential map, $\expOp$. Since ${\expOp}^{-1}_{x_{k+1}}(x_k) = - \parallelTransport{x_k}{x_{k+1}} ({\expOp}^{-1}_{x_k}(x_{k+1}))$ holds, we get 
+\begin{equation*}
+    \begin{split}
+        \hat{m}_{k+1}(- \parallelTransport{x_k}{x_{k+1}}( {\expOp}^{-1}_{x_k}(x_{k+1}) )) & = \operatorname{grad} f(x_{k+1}) - \mathcal{H}_{k+1}[\parallelTransport{x_k}{x_{k+1}}( {\expOp}^{-1}_{x_k}(x_{k+1}) )] = \\ & = \parallelTransport{x_k}{x_{k+1}}(\operatorname{grad} f(x_k)).
+    \end{split}
+\end{equation*}
+By rearranging we obtain
+\begin{equation}\label{RiemannianQuasi-NewtonEquationExpParallel}
+    \mathcal{H}_{k+1} [\parallelTransport{x_k}{x_{k+1}}( {\expOp}^{-1}_{x_k}(x_{k+1}) )] = \operatorname{grad} f(x_{k+1}) - \parallelTransport{x_k}{x_{k+1}}(\operatorname{grad} f(x_k)). 
+\end{equation}
+We introduce $s_k = \parallelTransport{x_k}{x_{k+1}}( {\expOp}^{-1}_{x_k}(x_{k+1}) )$ and $y_k = \operatorname{grad} f(x_{k+1}) - \parallelTransport{x_k}{x_{k+1}}(\operatorname{grad} f(x_k))$ to shorten \cref{RiemannianQuasi-NewtonEquationExpParallel} - as in the Euclidean case - further to
+\begin{equation*}
+    \mathcal{H}_{k+1} [s_k] = y_k \quad \text{or equivalently} \quad \mathcal{B}_{k+1} [y_k] = s_k, 
+\end{equation*}
+where $\mathcal{B}_{k+1} = \mathcal{H}^{-1}_{k+1}$. \cref{RiemannianQuasi-NewtonEquationExpParallel} explicitly uses the exponential map, $\expOp$, and parallel transport, $\parallelTransportSymbol$, in its definition and is a specific type of \cref{RiemannianQuasi-NewtonEquation}. As already mentioned, the resulting Riemannian quasi-Newton method and its convergence behavior depend on the choice of these two maps. Alternate forms of this equation can be derived by using a different retraction or a different vector transport \cite[p.~19]{Huang:2013}. \\
+Of course, there are again a large number of operators $\mathcal{H}_{k+1} \colon \; \tangent{x_{k+1}} \to \tangent{x_{k+1}}$ which fulfill \cref{RiemannianQuasi-NewtonEquationExpParallel}. As in the Euclidean case the Riemannian average Hessian 
+\begin{equation}\label{RiemannianAverageHessian}
+    \tilde{\mathcal{G}}_k = \int^{1}_{0} \parallelTransportDir{\geodesic<l>{x_k}{\alpha_k \eta_k}(t)}{x_{k+1}} \circ \operatorname{Hess} f(\geodesic<l>{x_k}{\alpha_k \eta_k}(t)) \circ \parallelTransportDir{x_{k+1}}{\geodesic<l>{x_k}{\alpha_k \eta_k}(t)} \mathrm{d}t,
+\end{equation}
+where $\geodesic<l>{x_k}{\alpha_k \eta_k}(t) = \exponential{x_k}(t \; \alpha_k \eta_k)$, fulfills \cref{RiemannianQuasi-NewtonEquationExpParallel}, is self-adjoint, but is not positive definite in general. \\
+If we consider again \cref{RiemannianQuasi-NewtonEquation}, then the key point of Riemannian quasi-Newton methods can be described as the production of operators $\mathcal{H}_{k+1}$ (or $\mathcal{B}_{k+1}$) by convenient methods, so that they fulfill \cref{RiemannianQuasi-NewtonEquation} defined by the preselected retraction and vector transport, and adopt the positive-definiteness and self-adjointness. From the last requirement follows that, as in the Euclidean case, it is essential that 
+\begin{equation}\label{RiemannianCurvatureCondition}
+    g_{x_{k+1}}(s_k,y_k) > 0,
+\end{equation}
+where $s_k = \vectorTransportDir{x_k}{\alpha_k \eta_k}(\alpha_k \eta_k)$ and $y_k = \operatorname{grad} f(x_{k+1}) - \vectorTransportDir{x_k}{\alpha_k \eta_k}(\operatorname{grad} f(x_k))$, holds. Otherwise the \cref{RiemannianQuasi-NewtonEquation} cannot hold with $\mathcal{H}_{k+1}$ positive definite, whereas positive-definiteness of the operators is the key to guarantee that the search directions $\eta_k$ are descent directions \cite[p.~54]{Huang:2013}. From now on we will refer \cref{RiemannianCurvatureCondition} as Riemannian curvature condition or just curvature condition.  \\
+In the Euclidean case, the curvature condition, \cref{CurvatureCondition}, holds for any two points $x_k$ and $x_{k+1}$, if the objective $f$ is $\mu$-strongly convex. We show that this also holds in the Riemannian setup, provided that exponential map, $\expOp$, as retraction and parallel transport, $\parallelTransportSymbol$, as vector transport are available. We have
+
+\begin{definition}[{\cite[Definition~2]{ZhangSra:2016}}]
+    A differentiable function $f \colon \; \mathcal{M} \to \mathbb{R}$ is said to be geodesically $\mu$-strongly convex if for any $x,y \in \mathcal{M}$,
+    \begin{equation}\label{geodesicallyStronglyConvex}
+        f(y) \geq f(x) + g_x (\nabla f(x), {\expOp}^{-1}_{x}(y)) + \frac{\mu}{2} d(x,y)^2.
+    \end{equation}    
+\end{definition} 
+
+Let $x_k \neq x_{k+1}$ and $\mu > 0$. From \cref{geodesicallyStronglyConvex} we get 
+\begin{align}
+    g_{x_k} (\operatorname{grad} f(x_k), {\expOp}^{-1}_{x_k}(x_{k+1})) \leq f(x_{k+1}) - f(x_k) - \frac{\mu}{2} d(x_k,x_{k+1})^2 \label{muconvex1} \\ 
+    g_{x_{k+1}} (\operatorname{grad} f(x_{k+1}), {\expOp}^{-1}_{x_{k+1}}(x_k)) \leq f(x_k) - f(x_{k+1}) - \frac{\mu}{2} d(x_k,x_{k+1})^2. \label{muconvex2}
+\end{align}
+We use the linearity of $g_{x_{k+1}}(\cdot, \cdot)$ and multiply the left side of \cref{muconvex2} twice by $-1$ 
+\begin{equation*}
+    \begin{split}
+        g_{x_{k+1}} (\operatorname{grad} f(x_{k+1}), {\expOp}^{-1}_{x_{k+1}}(x_k)) & = - g_{x_{k+1}} (\operatorname{grad} f(x_{k+1}), -{\expOp}^{-1}_{x_{k+1}}(x_k)) = \\ & = g_{x_{k+1}} ( - \operatorname{grad} f(x_{k+1}), - {\expOp}^{-1}_{x_{k+1}}(x_k)).
+    \end{split}
+\end{equation*}
+We use, that $-{\expOp}^{-1}_{x_{k+1}}(x_k) = \parallelTransport{x_k}{x_{k+1}} ({\expOp}^{-1}_{x_k}(x_{k+1}))$ and apply the parallel transport $\parallelTransport{x_{k+1}}{x_k} = {\parallelTransport{x_k}{x_{k+1}}}^{-1}$ on both arguments, i.e. 
+\begin{equation}\label{muconvex3}
+    \begin{split}
+        g_{x_{k+1}} ( - \operatorname{grad} f(x_{k+1}), - {\expOp}^{-1}_{x_{k+1}}(x_k)) & = g_{x_k} ( - \parallelTransport{x_{k+1}}{x_k} (\operatorname{grad} f(x_{k+1})), {\expOp}^{-1}_{x_k}(x_{k+1})) \leq \\
+        & \leq f(x_k) - f(x_{k+1}) - \frac{\mu}{2} d(x_k,x_{k+1})^2.
+    \end{split}
+\end{equation}
+Now adding \cref{muconvex1} and \cref{muconvex3} leads to 
+\begin{equation*}
+    \begin{split}
+        g_{x_k} ( \operatorname{grad} f(x_k) - \parallelTransport{x_{k+1}}{x_k} (\operatorname{grad} f(x_{k+1})), {\expOp}^{-1}_{x_k}(x_{k+1})) & \leq - \mu d(x_k,x_{k+1})^2 \\
+        g_{x_k} ( \parallelTransport{x_{k+1}}{x_k} (\operatorname{grad} f(x_{k+1})) - \operatorname{grad} f(x_k), {\expOp}^{-1}_{x_k}(x_{k+1})) & \geq \mu d(x_k,x_{k+1})^2 \\
+        g_{x_{k+1}} ( \operatorname{grad} f(x_{k+1}) - \parallelTransport{x_k}{x_{k+1}} (\operatorname{grad} f(x_k)), \parallelTransport{x_k}{x_{k+1}}( {\expOp}^{-1}_{x_k}(x_{k+1})) & \geq \mu d(x_k,x_{k+1})^2 \\
+        g_{x_{k+1}} ( y_k, s_k) & \geq \mu d(x_k,x_{k+1})^2 > 0.
+    \end{split}
+\end{equation*}
+This means that for $\mu$-strongly convex functions the curvature condition, \cref{RiemannianCurvatureCondition} is satisfied for all $x_k$ and $x_{k+1}$ on the manifold $\mathcal{M}$ (provided, of course, that the manifold $\mathcal{M}$ is geodesically complete) and therefore it is not necessary to pay attention to this in a Riemannian quasi-Newton method, which uses exponential map, $\expOp$, and parallel transport, $\parallelTransportSymbol$. \\
+If the function is not geodesically $\mu$-strongly convex, the curvature condition, \cref{CurvatureCondition}, will not always hold. To be able to guarantee that $\mathcal{H}_{k+1}$ is positive definite, a suitable stepsize $\alpha_k$ is determined in Riemannian quasi-Newton methods. In the Euclidean case this was achieved by the restriction that $\alpha_k$ fulfills \cref{WolfeConditions2}. If we assume that the quasi-Newton method uses the vector transport by differentiated retraction, $\vectorTransportSymbol^{\retractionSymbol}$, of the chosen retraction, $\retractionSymbol$, and this specific vector transport is isometric, i.e. $\vectorTransportSymbol^{\retractionSymbol} = \vectorTransportSymbol^S$, then, because of \cref{RiemannianWolfeConditions2.2}, a step size that satisfies \cref{RiemannianWolfeConditions2.1} leads to 
+\begin{equation}\label{RiemannianWolfeConditionResult}
+    \begin{split}
+        g_{\retract{x_k}(\alpha_k \eta_k)}(s_k,y_k) & = g_{\retract{x_k}(\alpha_k \eta_k)}(\vectorTransportDir{x_k}{\alpha_k \eta_k}(\alpha_k \eta_k)[\retractionSymbol], \operatorname{grad} f(\retract{x_k}(\alpha_k \eta_k)) - \vectorTransportDir{x_k}{\alpha_k \eta_k}(\operatorname{grad} f(x_k))[\retractionSymbol] ) = \\
+        & =  \alpha_k g_{\retract{x_k}(\alpha_k \eta_k)}(\vectorTransportDir{x_k}{\alpha_k \eta_k}(\eta_k)[\retractionSymbol], \operatorname{grad} f(\retract{x_k}(\alpha_k \eta_k))) - \\
+        & - \alpha_k g_{\retract{x_k}(\alpha_k \eta_k)} ( \vectorTransportDir{x_k}{\alpha_k \eta_k}(\eta_k)[\retractionSymbol] , \vectorTransportDir{x_k}{\alpha_k \eta_k}(\operatorname{grad} f(x_k))[\retractionSymbol] ) = \\
+        & = \alpha_k g_{\retract{x_k}(\alpha_k \eta_k)}(\vectorTransportDir{x_k}{\alpha_k \eta_k}(\eta_k)[\retractionSymbol], \operatorname{grad} f(\retract{x_k}(\alpha_k \eta_k))) - \alpha_k g_{x_k} ( \eta_k, \operatorname{grad} f(x_k)) \geq \\
+        & \geq \alpha_k c_2 g_{x_k}(\eta_k, \operatorname{grad} f(x_k) ) - \alpha_k g_{x_k}(\eta_k, \operatorname{grad} f(x_k) ) = \\
+        & = (c_2 - 1) \alpha_k g_{x_k}(\eta_k, \operatorname{grad} f(x_k) ) > 0.
+    \end{split}
+\end{equation}
+since $c_2 < 1$ and $\eta_k$ is a descent direction. We note that this is the case if the exponential map, $\expOp$, as retraction and the parallel transport, $\parallelTransportSymbol$, as vector transport are used in the method. Because in this case \cref{RiemannianWolfeConditions2.1} and \cref{RiemannianWolfeConditions2.2} are identical \cite[p.~13]{Qi:2011}. 

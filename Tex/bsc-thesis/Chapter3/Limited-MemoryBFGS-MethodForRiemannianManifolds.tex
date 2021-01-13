@@ -1,0 +1,98 @@
+\section{Limited-Memory RBFGS Method}
+\label{Section4.6}
+
+The limited-memory BFGS method, \cref{LBFGSMethod}, achieved popularity because of its efficiency. Therefore it makes sense to consider this concept also for the Riemannian setup. We present a limited-memory version of the RBFGS method, short LRBFGS method, introduced by \cite{HuangGallivanAbsil:2015}. As in the Euclidean setting, the idea is to only store the $m$ most recent tangent vectors $s_i$ and $y_i$, by which an operator is newly created, instead of transporting an operator in each iteration. \\ 
+The motivation results on the one hand from the memory advantages, which were already mentioned in \cref{Section2.6}, and on the other hand because in practical applications of the “ordinary” RBFGS method a representation of the operator $\mathcal{B}^{RBFGS}_k$ is needed, which may not be easy to realize or applying it may be computationally too expensive. As we will see, a generalization of the LBFGS method, \cref{LBFGSMethod}, for the Riemannian case solves these problems \cite[p.~1676]{HuangGallivanAbsil:2015}. \\
+We start again with the last expression of the inverse RBFGS formula in \cref{RiemannianInverseBFGSFormula}, namely:
+\begin{equation*}
+    	\mathcal{B}^{RBFGS}_{k+1} [\cdot] = \Big{(} \id_{\tangent{x_{k+1}}}[\cdot] - \frac{s_k y^{\flat}_k [\cdot]}{s^{\flat}_k [y_k]} \Big{)} \widetilde{\mathcal{B}}^{RBFGS}_k [\cdot] \Big{(} \id_{\tangent{x_{k+1}}}[\cdot] - \frac{y_k s^{\flat}_k [\cdot]}{s^{\flat}_k [y_k]} \Big{)} + \frac{s_k s^{\flat}_k [\cdot]}{s^{\flat}_k [y_k]}.
+\end{equation*}
+For given $s_k, y_k \in \tangent{x_{k+1}}$, which satisfy \cref{RiemannianCurvatureCondition}, we set 
+\begin{equation}\label{RiemannianLimitedMemoryVariables}
+    \rho_k = \frac{1}{g_{x_{k+1}}(s_k, y_k)} , \quad \mathcal{V}_k [\cdot] = \id_{\tangent{x_{k+1}}}[\cdot] - \rho_k y_k s^{\flat}_k [\cdot]
+\end{equation}
+and obtain
+\begin{equation}\label{RiemannianLimitedMemoryFormula}
+    \mathcal{B}^{RBFGS}_{k+1} [\cdot] = \mathcal{V}^{\flat}_k [\cdot] \widetilde{\mathcal{B}}^{RBFGS}_k [\cdot] \mathcal{V}_k [\cdot] + \rho_k s_k s_k^{\flat} [\cdot] = \mathcal{V}^{\flat}_k \circ \widetilde{\mathcal{B}}^{RBFGS}_k \circ \mathcal{V}_k [\cdot] + \rho_k s_k s_k^{\flat} [\cdot].
+\end{equation} 
+One can show that $(\id_{\tangent{x_{k+1}}}[\cdot] - \rho_k y_k s^{\flat}_k [\cdot])^{\flat} = \id_{\tangent{x_{k+1}}}[\cdot] - \rho_k s_k y^{\flat}_k [\cdot]$ holds. \\
+We now consider the $k$-th iteration. The methodology of discarding the oldest vector pair and adding this from the iteration obtained new pair $\{ s_k, y_k\}$ to the set is adopted one-to-one from \cref{LBFGSMethod}. Since the goal is to save memory, and the approximation $\mathcal{B}^{RBFGS}_k$ for large optimization problems can take up a lot of memory, a modified version of it is stored, which can be specified by $m$ tangent vectors. Since we want to define an operator on the tangent space $\tangent{x_k}$ in the the $k$-th iteration, these used tangent vectors must lie in or be transported via an isometric vector transport, $\vectorTransportSymbol^S$, into it. We consider the latter case. Let $\{ s_i, y_i\}_{i=k-m}^{k-1}$ be the tangent vectors from the last $m$ iterations. According to the definition of $s_i$ and $y_i$, they lie in the tangent space of the iterate $x_{i+1}$, which means that each generated vector pair $\{ s_i, y_i\}$ in the set $\{ s_i, y_i\}_{i=k-m}^{k-1}$ actually lies in a different tangent space, i.e. $\{ s_i, y_i\} \subset \tangent{x_{i+1}} \neq \tangent{x_{j+1}} \supset \{ s_j, y_j\}$ for $x_i \neq x_j$ in general. Therefore, at the end of each iteration all tangent vectors are transported into the tangent space of the newly calculated iterate. That means for the $k$-th iteration, the $m$ tangent vectors $\{ \widetilde{s}_i, \widetilde{y}_i\}_{i=k-m}^{k-1}$, which are used for the approximation, were transported (in the $(k-1)$-th iteration) into the tangent space $\tangent{x_k}$ before they were stored. We have 
+\begin{equation*}
+    \begin{split}
+        \widetilde{s}_{k-m+j} & = \vectorTransportDir{x_{k-1}}{\alpha_{k-1} \eta_{k-1}}[S] \circ \cdots \circ \vectorTransportDir{x_{k-m+j}}{\alpha_{k-m+j} \eta_{k-m+j}}(\alpha_{k-m+j} \eta_{k-m+j})[S] = \\ &= \vectorTransportDir{x_{k-1}}{\alpha_{k-1} \eta_{k-1}}[S] \circ \cdots \circ \vectorTransportDir{x_{k-m+j+1}}{\alpha_{k-m+j+1} \eta_{k-m+j+1}}(s_{k-m+j})[S] \in \tangent{x_k}
+    \end{split}
+\end{equation*}
+for all $j = 0,1, \cdots, m-1$. In the same way is $\widetilde{y}_{k-m+j}$ generated. It holds $\widetilde{s}_{k-1} = s_{k-1}$, since it already is in the tangent space $\tangent{x_k}$. \\
+As in the Euclidean case, in the $k$-th iteration a positive definite self-adjoint initial operator $\mathcal{B}^{(0)}_k \colon \; \tangent{x_k} \to \tangent{x_k}$ is chosen, which can be the same for every iteration, or can vary from iteration to iteration. Then \cref{RiemannianLimitedMemoryFormula} is applied $m$ times on $\mathcal{B}^{(0)}_k$ repeatedly using $\{ \widetilde{s}_i, \widetilde{y}_i\}_{i=k-m}^{k-1} \subset \tangent{x_k}$. The corresponding approximation, called $\mathcal{B}^{LRBFGS}_k \colon \; \tangent{x_k} \to \tangent{x_k}$, reads the following:
+\begin{equation}\label{LRBFGSUpdate}
+    \begin{split}
+        \mathcal{B}^{LRBFGS}_k [\cdot] = \mathcal{B}^{(m)}_k [\cdot] = & \mathcal{V}^{\flat}_{k-1} \circ \widetilde{\mathcal{B}}^{(m-1)}_k \circ \mathcal{V}_{k-1} [\cdot] + \rho_{k-1} s_{k-1} s_{k-1}^{\flat} [\cdot] = \\
+        = & \cdots = \\
+        = & \; (\mathcal{V}^{\flat}_{k-1} \circ \cdots \circ \widetilde{\mathcal{V}}_{k-m+1} \circ \widetilde{\mathcal{V}}^{\flat}_{k-m}) \circ \mathcal{B}^{(0)}_k \circ (\widetilde{\mathcal{V}}_{k-m} \circ \widetilde{\mathcal{V}}_{k-m+1} \circ \cdots \circ \mathcal{V}_{k-1} [\cdot] + \\
+        & + \widetilde{\rho}_{k-m} (\mathcal{V}^{\flat}_{k-1} \circ \cdots \circ \widetilde{\mathcal{V}}^{\flat}_{k-m+1}) \circ \widetilde{s}_{k-m} \widetilde{s}^{\flat}_{k-m} \circ (\widetilde{\mathcal{V}}_{k-m+1} \circ \cdots \circ \mathcal{V}_{k-1}) [\cdot] + \\
+        & + \widetilde{\rho}_{k-m+1} (\mathcal{V}^{\flat}_{k-1} \circ \cdots \circ \widetilde{\mathcal{V}}^{\flat}_{k-m+2}) \circ \widetilde{s}_{k-m+1} \widetilde{s}^{\flat}_{k-m+1} \circ (\widetilde{\mathcal{V}}_{k-m+2} \circ \cdots \circ \mathcal{V}_{k-1}) [\cdot] + \\
+        & + \cdots +\\
+        & + \rho_{k-1} s_{k-1} s^{\flat}_{k-1} [\cdot],
+    \end{split}
+\end{equation}
+where $\widetilde{\mathcal{V}}_{k-m+j} [\cdot] = \id_{\tangent{x_{k-m+j+1}}}[\cdot] - \rho_k \widetilde{y}_{k-m+j} \widetilde{s}_{k-m+j}^{\flat} [\cdot]$. \\
+We see, that $\mathcal{B}^{LRBFGS}_k$ is completely calculated from $\mathcal{B}^{(0)}_k$ and the vector pairs $\{ \widetilde{s}_i, \widetilde{y}_i\}_{i=k-m}^{k-1}$. Also here, $\mathcal{B}^{LRBFGS}_k$ must be considered as an approximation of $\mathcal{B}^{RBFGS}_k$. \\
+The operator $\mathcal{B}^{LRBFGS}_k$ does not have to be calculated in each iteration. The descent direction $\eta_k = - \mathcal{B}^{LRBFGS}_k[\operatorname{grad} f(x_k)] \in \tangent{x_k}$ can be calculated recursively by an algorithm which is the generalized version of \cref{LBFGSTwo-LoopRecursion} for the Riemannian setup. $\mathcal{B}^{LRBFGS}_k[\operatorname{grad} f(x_k)]$ is obtained by performing a sequence of inner products and vector summations involving $\operatorname{grad} f(x_k)$ and the pairs $\{ \widetilde{s}_i, \widetilde{y}_i\}_{i=k-m}^{k-1}$, which is easily possible in the tangent space $\tangent{x_k}$. We remember that all vector pairs already lie in the correct tangent space, i.e. $\{ \widetilde{s}_i, \widetilde{y}_i \} \in \tangent{x_k}$ for all $i = k-m, \cdots, k-1$, which means that only the action of $\vectorTransportSymbol^S$ is needed to calculate $\eta_k$ \cite[p.~1676]{HuangGallivanAbsil:2015}:
+
+\begin{algorithm}[H]
+	\caption{LRBFGS two-loop recursion for $\mathcal{B}^{LRBFGS}_k[\operatorname{grad} f(x_k)]$} \label{LRBFGSTwo-LoopRecursion}
+	\begin{algorithmic}[1]
+        \State $q = \operatorname{grad} f(x_k)$
+        
+        \For{$i = k-1, k-2, \cdots, k-m$}
+            \State $\rho_i = \frac{1}{g_{x_k}(\widetilde{s}_i, \widetilde{y}_i)}$
+            \State $\xi_i = \rho_i g_{x_k}(\widetilde{s}_i, q)$ 
+            \State $q = q - \xi_i \widetilde{y}_i$
+        \EndFor
+
+        \State $r = \mathcal{B}^{(0)}_k[q]$
+        
+        \For{$i = k-m, k-m+1, \cdots, k-1$}
+            \State $\omega = \rho_i g_{x_k}(\widetilde{y}_i, r)$ 
+            \State $r= r  + (\xi_i - \omega) \widetilde{s}_i$
+		\EndFor
+		
+		\State \textbf{Stop with result} $\mathcal{B}^{LRBFGS}_k[\operatorname{grad} f(x_k)]$.
+    \end{algorithmic}
+\end{algorithm}
+
+The operator $\mathcal{B}^{(0)}_k$ can be any positive definite self-adjoint operator, not necessarily $\widetilde{\mathcal{B}}^{LRBFGS}_{k-m} = \vectorTransport{x_{k-m}}{x_k}[S] \circ \mathcal{B}^{LRBFGS}_{k-m} \circ \vectorTransport{x_k}{x_{k-m}}[S]$. Similar to the Euclidean case, $\mathcal{B}^{(0)}_k[\cdot] = c_k \id_{\tangent{x_k}}[\cdot]$ is often used, where
+\begin{equation}\label{RiemannianLBFGSinitialMatrixNorm}
+    c_k = \frac{\widetilde{s}^{\flat}_{k-1} \widetilde{y}_{k-1}}{\widetilde{y}^{\flat}_{k-1} \widetilde{y}_{k-1}} = \frac{s^{\flat}_{k-1} y_{k-1}}{y^{\flat}_{k-1} y_{k-1}} = \frac{g_{x_k}(s_{k-1}, y_{k-1})}{g_{x_k}(y_{k-1}, y_{k-1})}.
+\end{equation}
+For the first iteration usually the identity operator is used, i.e. $\mathcal{B}^{(0)}_0[\cdot] = \id_{\tangent{x_0}}[\cdot]$. Whether this choice for $c_k$ is advantageous has not yet been clarified for the Riemannian setup, but the results in the Euclidean case suggest it is. \\
+The following algorithm is a generalization of \cref{LBFGSMethod}. That $\eta_k$ is a descent direction in each iteration is guaranteed by assuming that the isometric vector transport, $\vectorTransportSymbol^S$ with associated retraction, $\retractionSymbol$, fulfill the locking condition, \cref{LockingCondition}. By choosing a stepsize $\alpha_k > 0$ that satisfies \cref{RiemannianWolfeConditions2.1}, it is ensured that the curvature condition, \cref{RiemannianCurvatureCondition}, is satisfied in each iteration, and since \cref{LRBFGSUpdate} can be seen as an $m$ times positive update of a positive definite initial operator $\mathcal{B}^{(0)}_k$, the positive-definiteness and self-adjointness is passed to $\mathcal{B}^{LRBFGS}_k$ (see \cref{RiemannianPositiveDefiniteUpdate}). We point out that $\mathcal{B}^{LRBFGS}_k$ satisfies the Riemannian quasi-Newton equation, \cref{InverseGlobalRiemannianBFGS-MethodLockingCondition}, i.e. $\mathcal{B}^{LRBFGS}_k [y_{k-1}] = s_{k-1}$.
+
+\begin{algorithm}[H]
+	\caption{LRBFGS Method} \label{LRBFGSMethod}
+    \begin{algorithmic}[1]
+        \State Riemannian manifold $(\mathcal{M}, g)$; isometric vector transport $\vectorTransportSymbol^S$ with $\retractionSymbol$ as associated retraction, which satisfies \cref{LockingCondition}; continuously differentiable real-valued function $f$ on $\mathcal{M}$, bounded below; initial iterate $x_0 \in \mathcal{M}$; convergence tolerance $\varepsilon > 0$; linesearch parameters $0 < c_1 < \frac{1}{2} < c_2 < 1$; memory size $m > 0$. Set $k = 0$.
+        \While{$\lVert \operatorname{grad} f(x_k)\rVert_{x_k} > \varepsilon$}
+            \State Choose $\mathcal{B}^{(0)}_k$ (e.g. $\mathcal{B}^{(0)}_k[\cdot] = c_k \id_{\tangent{x_k}}[\cdot]$ from \cref{RiemannianLBFGSinitialMatrixNorm}).
+            \State Compute $\eta_k = - \mathcal{B}^{LRBFGS}_k[\operatorname{grad} f(x_k)] \in \tangent{x_k}$ with $\mathcal{B}^{LRBFGS}_k[\operatorname{grad} f(x_k)]$ 
+            \StatexIndent[2] by means of \cref{LBFGSTwo-LoopRecursion}.
+            \State Determine a stepsize $\alpha_k$ that satisfies the Wolfe conditions \cref{RiemannianWolfeConditions1} and \cref{RiemannianWolfeConditions2.1}.
+			\State Set $x_{k+1} = \retract{x_k}(\alpha_k \eta_k)$.
+			\If{$k > m$}
+                \State Discard the vector pair $\{ \widetilde{s}_{k−m}, \widetilde{y}_{k−m}\}$ from storage and transport the vectors $\{ \widetilde{s}_i, \widetilde{y}_i\}_{i=k-m+1}^{k-1}$ 
+                \StatexIndent[2] via $\vectorTransportSymbol^S$ to $\tangent{x_{k+1}}$. 
+			\Else 
+				\State Transport the vectors $\{ \widetilde{s}_i, \widetilde{y}_i\}_{i=k-m}^{k-1}$ via $\vectorTransportSymbol^S$ to $\tangent{x_{k+1}}$.
+            \EndIf 
+            \State Compute $\widetilde{s}_k = s_k = \vectorTransportDir{x_k}{\alpha_k \eta_k}(\alpha_k \eta_k)[S]$ and $\widetilde{y}_k = y_k = \beta^{-1}_k \operatorname{grad} f(x_{k+1}) - \vectorTransportDir{x_k}{\alpha_k \eta_k}(\operatorname{grad} f(x_k))[S]$,
+            \StatexIndent[2] where $\beta_k$ by means of \cref{LockingConditionParameter}, and add $\{\widetilde{s}_k, \widetilde{y}_k \}$ into storage.
+            \State Set $k = k+1$.
+        \EndWhile
+        \State \textbf{Return} $x_k$.
+    \end{algorithmic}
+\end{algorithm}
+
+\cref{LRBFGSMethod} follows a different strategy than the Riemannian quasi-Newton methods seen before. First the approximation of the current iteration $\mathcal{B}^{LRBFGS}_k$ is generated and the actual update consists of the determination of the vectors, which are transported to the tangent space $\tangent{x_{k+1}}$. During its first $m − 1$ iterations, the LRBFGS method, \cref{LRBFGSMethod}, is equivalent to the RBFGS method, \cref{InverseGlobalRiemannianBFGS-MethodLockingCondition}, if the initial positive definite and self-adjoint operator is the same in both methods (i.e. $\mathcal{B}^{LRBFGS}_0 = \mathcal{B}^{(0)}_0 = \mathcal{B}^{RBFGS}_0$), and if we choose $\mathcal{B}^{(0)}_k = \mathcal{B}^{LRBFGS}_0$ in \cref{LRBFGSTwo-LoopRecursion} at each iteration of \cref{LRBFGSMethod}. From a numerical point of view this brings with it a great advantage. As mentioned, a representation of $\mathcal{B}^{RBFGS}_k$ is sometimes not available or expensive. To avoid this problem, one chooses $m$ very large (e.g. one can set $m$ equal to the maximum number of iterations), hoping to find a minimum before the number of iterations overtakes the number of stored vectors. This avoids creating an operator $\mathcal{B}^{RBFGS}_{k+1}$ by means of \cref{RiemannianCautiousUpdate} and passing $\mathcal{B}^{RBFGS}_k$ in each iteration, but still allows the “ordinary” RBFGS to be executed with only inner products and weighted sums in the tangent space $\tangent{x_k}$ when calculating the search direction $\eta_k$. \\
+The role of the stepsize $\alpha_k$ has not yet been clarified. In practical applications for the Euclidean case, care is taken to ensure that $\alpha_k$ fulfills the strong Wolfe conditions \cref{WolfeConditions1} and \cref{StrongWolfeCondition}. In the literature there is no indication yet whether this is also necessary in the Riemannian case. A generalization of the strong Wolfe conditions is known for the Riemannian setup, see e.g. \cite[p.~5]{SatoIwai:2015}. But the same question arises whether this generalization ensures the Riemannian curvature condition, \cref{RiemannianCurvatureCondition}, in each iteration.  \\
+Convergence analyses of the LRBFGS method for general Riemannian manifolds and (non-)convex objective functions have not yet been made. It remains to be assumed, however, that results similar to those in the Euclidean setup can be achieved. \\
+The principle of the cautious update can also be applied here by deciding in each iteration on the basis of a decision rule whether the new tangent vectors are stored or whether the current memory is simply transported (and projected) to the new tangent space $\tangent{x_{k+1}}$. If it is additionally assumed that $\alpha_k$ only has to fulfill \cref{CautiousStepsize1} or \cref{CautiousStepsize2}, the range of stepsize strategies is extended and this updated LRBFGS method avoids the dependence on differentiated retraction \cite[p.~486]{HuangAbsilGallivan:2018}. \\ 

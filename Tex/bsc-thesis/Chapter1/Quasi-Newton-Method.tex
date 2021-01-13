@@ -1,0 +1,73 @@
+\section{Quasi-Newton Methods}
+\label{Section2.2}
+
+Quasi-Newton methods are a class of numerical methods for solving nonlinear minimization problems. As the name suggests, these are based on Newton's method, but attempt to minimize the computational effort. The class goes back to the physicist William Cooper Davidon, who developed in \cite{Davidon:1959} the first quasi-Newton algorithm, which turned out to be one of the most creative ideas in nonlinear optimization \cite[p.~135]{NocedalWright:2006}. \\
+For Newton's method, both the gradient and the Hessian are calculated in every iteration. Of course, we get useful information about the curvature of the objective function from the Hessian, we get local quadratic convergence and if we add a method for determining stepsizes, we even get global convergence. But there are arguments against Newton's method, mainly related to the calculation of the Hessian because it could be too costly or not possible at all (which includes the case that the Hessian does not exist). Quasi-Newton methods follow the strategy of not calculating and instead approximating the objective's Hessian. This approximation is updated from iteration to iteration, so that the occurring linear systems of equations are very easier to solve than with Newton's method. With the so-called inverse quasi-Newton methods the solution of a linear system of equations is even completely avoided. Thus each iteration of these methods is much less complex than one of Newton's method \cite[p.~129]{GeigerKanzow:1999}. Quasi-Newton methods require only the gradient of the objective function at each iterate. By measuring the changes in gradients, they construct a model of the objective function that is good enough to produce superlinear convergence. Since the Hessian is not required, quasi-Newton methods are sometimes more efficient than Newton's method \cite[p.~136]{NocedalWright:2006}. \\
+For the derivation of this class of numerical methods, we form the following quadratic model of the continuously differentiable objective function $f \colon \; \mathbb{R}^n \to \mathbb{R}$ at the iterate $x_k$:
+\begin{equation*}
+    m_k(d) = f(x_k) + g^{\mathrm{T}}_k d + \frac{1}{2} d^{\mathrm{T}} H_k d,
+\end{equation*}
+where $g_k \triangleq \nabla f(x_k)$. We want this model to be convex, so $H_k \in \mathbb{R}^{n \times n}$ must be a symmetric and positive definite (or short $\spd$) matrix which will be updated at every iteration. We see immediately that the interpolation conditions 
+\begin{equation}\label{InterpolationConditions}
+    m_{k}(0) = f(x_k) \quad \text{and} \quad \nabla m_{k}(0) = \nabla f(x_k)
+\end{equation}
+are satisfied and the minimizer $d_k$ of this model can explicitly be written as
+\begin{equation}\label{DescentDirection}
+    d_k = -H^{-1}_k g_k = -B_k g_k,
+\end{equation}
+where $B_k \in \mathbb{R}^{n \times n}$ from now on will be the inverse of $H_k$, which is also $\spd$. \cref{DescentDirection} is used as search direction, which is a descent direction since $B_k$ is positive definite and therefore $g^{\mathrm{T}}_k d_k = - g^{\mathrm{T}}_k B_k g_k < 0$ holds. The next iterate is defined as 
+\begin{equation*}
+    x_{k+1} = x_k + \alpha_k d_k,
+\end{equation*}
+where $\alpha_k$ is a stepsize appropriately chosen for $d_k$. We see that this iteration scheme is very similar to that produced by the globalized Newton's method. The key difference is that the approximation $H_k$ is used in place of the true Hessian $\nabla^2 f(x_k)$, as already mentioned. \\
+Instead of computing $H_k$ afresh at every iteration, Davidon proposed in \cite{Davidon:1959} to update it in a simple manner to account for the curvature measured during the most recent step. We define a quadratic model for $f$ at the newly computed iterate $x_{k+1}$: 
+\begin{equation*}
+    m_{k+1}(d) = f(x_{k+1}) + g^{\mathrm{T}}_{k+1} d + \frac{1}{2} d^{\mathrm{T}} H_{k+1} d.
+\end{equation*}
+But unlike Newton's method, in which we require that $\nabla^2 m_{k+1}(0) = \nabla^2 f(x_{k+1})$ holds, we require for quasi-Newton methods that the gradient of $m_{k+1}$ should match the gradient of the objective function $f$ at the latest two iterates $x_k$ and $x_{k+1}$. Since \cref{InterpolationConditions} also applies to $m_{k+1}$, i.e. $\nabla m_{k+1}(0) = \nabla f(x_{k+1})$, the latter is fulfilled. The first requirement can be written as
+\begin{equation*}
+    \nabla m_{k+1}(- \alpha_k d_k) = g_{k+1} - \alpha_k H_{k+1} d_k = g_k.
+\end{equation*}
+By rearranging and by setting $s_k = x_{k+1} - x_k = \alpha_k d_k$ and $y_k = \nabla f(x_{k+1}) - \nabla f(x_k) = g_{k+1} - g_k$, we obtain
+\begin{equation}\label{quasi-NewtonEquation}
+    H_{k+1} s_k = y_k \quad \text{or} \quad B_{k+1} y_k = s_k.
+\end{equation}
+This is the so-called quasi-Newton equation \cite[p.~136-137]{NocedalWright:2006}. A numerical method is called quasi-Newton method if the matrices $H_{k+1}$ or $B_{k+1}$ are determined in such a way that for all $k \geq 0$ the quasi-Newton equation, \cref{quasi-NewtonEquation}, is fulfilled \cite[p.~65]{UlbrichUlbrich:2012}. Of course there are many possibilities to determine a matrix $H_{k+1}$ (or $B_{k+1}$) satisfying \cref{quasi-NewtonEquation} for given vectors $s_k, y_k \in \mathbb{R}^n$. For a quadratic objective function $q(x) = c + b^{\mathrm{T}} x + \frac{1}{2} x^{\mathrm{T}} Q x$ the Hessian $\nabla^2 q(x) = Q$ would satisfy the quasi-Newton equation in each iteration, or in general the average Hessian
+\begin{equation}\label{AverageHessian}
+    \tilde{G}_k = \int_{0}^{1} \nabla^2 f(x_k + \tau s_k) d\tau = \int_{0}^{1} \nabla^2 f(x_k + \tau \alpha_k d_k) d\tau,
+\end{equation}
+of a twice continuously differentiable objective function $f$ would also fulfill the quasi-Newton equation, both result from Taylor's theorem (see e.g. \cite[Theorem~2.1]{NocedalWright:2006}). But the calculation of \cref{AverageHessian} in every iteration would be too costly and the objective function is generally neither quadratic nor twice continuously differentiable. The key point of quasi-Newton methods is to produce $H_{k+1}$ (or $B_{k+1}$) by using some convenient methods such that the quasi-Newton equation, \cref{quasi-NewtonEquation}, holds \cite[p.~205]{SunYuan:2006}. \\
+The quasi-Newton equation, \cref{quasi-NewtonEquation}, requires that the symmetric positive definite matrix $H_{k+1}$ maps $s_k$ to $y_k$. This will be possible only if $s_k$ and $y_k$ satisfy
+\begin{equation}\label{CurvatureCondition}
+    s^{\mathrm{T}}_k y_k > 0.
+\end{equation}
+In the following we will refer to \cref{CurvatureCondition} as curvature condition. It follows from multiplying the quasi-Newton equation, \cref{quasi-NewtonEquation}, by $s^{\mathrm{T}}_k$ from the left. If the objective function $f$ is $\mu$-strongly convex (see e.g. \cite[p.~72]{BertsekasNedicOzdaglar:2003}), then this inequality will be satisfied for any two points $x_k$ and $x_{k+1}$. For nonconvex functions will the curvature condition, \cref{CurvatureCondition}, not always hold. In this scenario we have to impose restrictions on the stepsize strategy that chooses $\alpha_k$. The curvature condition holds if we impose the (strong) Wolfe conditions on the line search. Setting $s_k = \alpha_k d_k$ and using \cref{WolfeConditions2} leads to: 
+\begin{equation}\label{CurvatureConditionWolfe}
+    y^{\mathrm{T}}_k s_k \geq (c_2 - 1) \alpha_k g^{\mathrm{T}}_k d_k.
+\end{equation}
+Since $c_2 < 1$ and $d_k$ is a descent direction, the right side is positive and the curvature condition holds. This shows us the reason why \cref{WolfeConditions2} is also called curvature condition, since it guarantees \cref{CurvatureCondition}. When the curvature condition, \cref{CurvatureCondition}, is satisfied, the quasi-Newton equation, \cref{quasi-NewtonEquation}, has always a solution $H_{k+1}$. In fact, it admits an infinite number of solutions, since the $n(n+1)/2$ degrees of freedom in a symmetric positive definite matrix exceed the conditions imposed by the quasi-Newton equation. The requirement of positive-definiteness imposes $n$ additional inequalities - all principal minors must be positive - but these conditions do not absorb the remaining degrees of freedom \cite[p.~138]{NocedalWright:2006}. \\
+Quasi-Newton methods of course follow the approach to approximate the Hessian matrices $G_k = \nabla^2 f(x_k)$ in each iteration “sufficiently well” by more easily calculable matrices $H_k$. \cref{corGeigerKanzow7.9} gives a hint that the matrices $H_{k+1}$ must be constructed in such a way that they fulfill the quasi-Newton equation \cref{quasi-NewtonEquation}. Necessary and sufficient for superlinear convergence of the sequence $\{x_k\}_k$ to a minimizer $x^*$ is 
+\begin{equation}\label{DennisMoreConstruction}
+    \lVert (G_k - H_k)(x_{k+1} - x_k) \rVert = o( \lVert x_{k+1}-x_k \rVert ).
+\end{equation}
+It can be shown that \cref{DennisMoreConstruction} is equivalent to 
+\begin{equation*}
+    \lVert g_{k+1} - g_k - H_k (x_{k+1} - x_k) \rVert = o( \lVert x_{k+1}-x_k \rVert ),
+\end{equation*}
+which in turn motivates the requirement that $H_{k+1}$ satisfies the quasi-Newton equation, \cref{quasi-NewtonEquation}. We note that $x_{k+1}$ occurs here and the requirement can therefore only be taken into account when $H_{k+1}$ is determined \cite[p.~129-130]{GeigerKanzow:1999}. \\
+Finally, we summarize all the advantages of the class of quasi-Newton methods in comparison to Newton's method, which shows that their use is justified for the numerical solving of optimization problems: \\
+
+\begin{table}[H]
+    \resizebox{\textwidth}{!}{
+        \begin{tabular}{l l}
+            \toprule
+            quasi-Newton methods & Newton's method \\ 
+            \midrule
+            Only need the function values and gradients & Need the function values, gradients and Hessians \\
+            $\{H_k\}_k$ maintains positive definite for several updates & $\{G_k\}_k$  is not sure to be positive definite \\
+            Need $\mathcal{O}(n^2)$ multiplications in each iteration & Need $\mathcal{O}(n^3)$ multiplications in each iteration \\
+            \bottomrule
+        \end{tabular}
+    }
+    \caption{Comparison of quasi-Newton methods to Newton's method \cite[p.~206]{SunYuan:2006}.}
+\end{table}
