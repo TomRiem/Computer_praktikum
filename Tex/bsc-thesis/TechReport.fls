@@ -1976,10 +1976,14 @@ INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\vf\public\libertine
 INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\libertine\LinBiolinumT-osf-sc-t1--base.tfm
 INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\vf\public\libertine\LinBiolinumT-osf-t1.vf
 INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\libertine\LinBiolinumT-osf-t1--base.tfm
-INPUT c:\Users\rieme\Computer_praktikum\Tex\bsc-thesis\Chapter0\Introduction.tex
-INPUT c:\Users\rieme\Computer_praktikum\Tex\bsc-thesis\Chapter0\Introduction.tex
-INPUT c:\Users\rieme\Computer_praktikum\Tex\bsc-thesis\Chapter0\Introduction.tex
-INPUT c:\Users\rieme\Computer_praktikum\Tex\bsc-thesis\Chapter0\Introduction.tex
+INPUT c:\Users\rieme\Computer_praktikum\Tex\bsc-thesis\Chapter1\Introduction.tex
+INPUT c:\Users\rieme\Computer_praktikum\Tex\bsc-thesis\Chapter1\Introduction.tex
+INPUT c:\Users\rieme\Computer_praktikum\Tex\bsc-thesis\Chapter1\Introduction.tex
+INPUT c:\Users\rieme\Computer_praktikum\Tex\bsc-thesis\Chapter1\Introduction.tex
+INPUT c:\Users\rieme\Computer_praktikum\Tex\bsc-thesis\Chapter2\EuclideanSR1.tex
+INPUT c:\Users\rieme\Computer_praktikum\Tex\bsc-thesis\Chapter2\EuclideanSR1.tex
+INPUT c:\Users\rieme\Computer_praktikum\Tex\bsc-thesis\Chapter2\EuclideanSR1.tex
+INPUT c:\Users\rieme\Computer_praktikum\Tex\bsc-thesis\Chapter2\EuclideanSR1.tex
 INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\vf\public\newtx\nxlmi0.vf
 INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\newtx\LibertineMathMI.tfm
 INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\newtx\NewTXMI.tfm
@@ -1991,6 +1995,39 @@ INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\vf\public\newtx\nxl
 INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\newtx\LibertineMathMI7.tfm
 INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\newtx\NewTXMI7.tfm
 INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\newtx\stxscr.tfm
+INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\libertine\LinLibertineT-osf-t1.tfm
+INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\libertine\LinLibertineT-osf-t1.tfm
+INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\vf\public\newtx\ntxsy.vf
+INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\newtx\txsys.tfm
+INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\newtx\txex-bar.tfm
+INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\vf\public\libertine\LinLibertineT-lf-ot1.vf
+INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\libertine\LinLibertineT-lf-ot1--base.tfm
+INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\vf\public\libertine\LinLibertineT-lf-ot1.vf
+INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\libertine\LinLibertineT-lf-ot1--base.tfm
+INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\vf\public\newtx\ntxsy7.vf
+INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\newtx\txsys.tfm
+INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\newtx\txex-bar.tfm
+INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\vf\public\newtx\nxlmia.vf
+INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\newtx\LibertineMathRM.tfm
+INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\newtx\txmiaSTbb.tfm
+INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\newtx\txmiaX.tfm
+INPUT c:\Users\rieme\Computer_praktikum\Tex\bsc-thesis\Chapter3\RiemannianSR1.tex
+INPUT c:\Users\rieme\Computer_praktikum\Tex\bsc-thesis\Chapter3\RiemannianSR1.tex
+INPUT c:\Users\rieme\Computer_praktikum\Tex\bsc-thesis\Chapter3\RiemannianSR1.tex
+INPUT c:\Users\rieme\Computer_praktikum\Tex\bsc-thesis\Chapter3\RiemannianSR1.tex
+INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\vf\public\newtx\ntxexx.vf
+INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\newtx\txexs.tfm
+INPUT c:\Users\rieme\Computer_praktikum\Tex\bsc-thesis\Chapter3\Preliminaries.tex
+INPUT c:\Users\rieme\Computer_praktikum\Tex\bsc-thesis\Chapter3\Preliminaries.tex
+INPUT c:\Users\rieme\Computer_praktikum\Tex\bsc-thesis\Chapter3\Preliminaries.tex
+INPUT c:\Users\rieme\Computer_praktikum\Tex\bsc-thesis\Chapter3\Preliminaries.tex
+INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\libertine\LinBiolinumT-osf-sc-t1.tfm
+INPUT c:\Users\rieme\Computer_praktikum\Tex\bsc-thesis\Chapter3\RSR1.tex
+INPUT c:\Users\rieme\Computer_praktikum\Tex\bsc-thesis\Chapter3\RSR1.tex
+INPUT c:\Users\rieme\Computer_praktikum\Tex\bsc-thesis\Chapter3\RSR1.tex
+INPUT c:\Users\rieme\Computer_praktikum\Tex\bsc-thesis\Chapter3\RSR1.tex
+INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\vf\public\libertine\LinBiolinumT-osf-sc-t1.vf
+INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\libertine\LinBiolinumT-osf-sc-t1--base.tfm
 INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\libertine\LinLibertineT-osf-sc-t1.tfm
 INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\tex\latex\inconsolata\t1zi4.fd
 INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\tex\latex\inconsolata\t1zi4.fd
@@ -2013,6 +2050,7 @@ OUTPUT c:\Users\rieme\Computer_praktikum\Tex\bsc-thesis\TechReport.run.xml
 INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\enc\dvips\inconsolata\i4-t1-5.enc
 INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\enc\dvips\libertine\lbtn_vpeqwl.enc
 INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\enc\dvips\libertine\lbtn_6mhf45.enc
+INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\enc\dvips\libertine\lbtn_3zs4uy.enc
 INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\enc\dvips\libertine\lbtn_ouu7z6.enc
 INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\enc\dvips\libertine\lbtn_wcay2e.enc
 INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\enc\dvips\libertine\lbtn_ulngvd.enc
@@ -2028,5 +2066,13 @@ INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\type1\public\libert
 INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\type1\public\libertine\LinLibertineT.pfb
 INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\type1\public\libertine\LinLibertineTI.pfb
 INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\type1\public\libertine\LinLibertineTI.pfb
+INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\type1\public\newtx\NewTXMI.pfb
+INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\type1\public\newtx\NewTXMI.pfb
+INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\type1\public\newtx\txexs.pfb
+INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\type1\public\newtx\txexs.pfb
+INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\type1\public\newtx\txmiaX.pfb
+INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\type1\public\newtx\txmiaX.pfb
 INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\type1\public\txfonts\txsyb.pfb
 INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\type1\public\txfonts\txsyb.pfb
+INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\type1\public\newtx\txsys.pfb
+INPUT C:\Users\rieme\AppData\Local\Programs\MiKTeX 2.9\fonts\type1\public\newtx\txsys.pfb
