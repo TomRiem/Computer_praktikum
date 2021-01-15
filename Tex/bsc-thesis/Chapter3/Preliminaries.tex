@@ -1,1 +1,21 @@
 \section{Preliminaries}
+
+The goal in this chapter is to solve Riemannian optimization problems, which consider finding an optimum of a real-valued function $f$ defined on a Riemannian manifold, i.e.
+\begin{equation}\label{RiemannianOptimizationProblem}
+    \min f(x), \quad x \in \mathcal{M}
+\end{equation}
+where $\mathcal{M}$ is a Riemannian manifold. From now on we assume that $\mathcal{M}$ is a $n$-dimensional geodesically complete Riemannian manifold. We further assume that the manifold $\mathcal{M}$ is embedded in a real-valued space (e.g. $\mathcal{M} \subseteq \mathbb{R}^m$) and connected. Further we assume that $f \colon \; \mathcal{M} \to \mathbb{R}$ is a twice continuously differentiable function, i.e. $f \in C^2(\mathcal{M})$. \\
+
+\begin{equation}\label{RiemannianIterativeUpdateScheme}
+    x_{k+1} = \exponential{x_k}(\alpha_k \eta_k),
+\end{equation}
+
+\begin{equation}\label{RiemannianWolfeConditions1}
+    f( \exponential{x_k}(\alpha_k \eta_k)) \leq f(x_k) + c_1 \alpha_k g_{x_k} (\operatorname{grad} f(x_k), \eta_k)
+\end{equation}
+
+\begin{equation}\label{RiemannianWolfeConditions2.2}
+    g_{\exponential{x_k}(\alpha_k \eta_k)} (\operatorname{grad} f(\exponential{x_k}(\alpha_k \eta_k)), \parallelTransportDir{x_k}{\alpha_k \eta_k}(\eta_k)) \geq c_2 g_{x_k} (\operatorname{grad} f(x_k), \eta_k).
+\end{equation}
+
+with $0 < c_1 < c_2 < 1$.

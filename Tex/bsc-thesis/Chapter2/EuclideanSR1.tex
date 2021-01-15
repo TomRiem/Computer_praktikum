@@ -24,7 +24,7 @@ is chosen as search direction, where the matrix $H_k \in \mathbb{R}^{n \times n}
     H_{k+1} (x_{k+1} - x_k) = \nabla f(x_{k+1}) - \nabla f(x_k) \quad \text{or} \quad B_{k+1} (\nabla f(x_{k+1}) - \nabla f(x_k)) = x_{k+1} - x_k.
 \end{equation*}
 
-For the sake of simplicity, we introduce the notations $s_k = x_{k+1} - x_k$ and $y_k = \nabla f(x_{k+1}) - \nabla f(x_k)$, thus we obtain
+For the sake of simplicity, we introduce the notations $s_k = x_{k+1} - x_k \in \mathbb{R}^n$ and $y_k = \nabla f(x_{k+1}) - \nabla f(x_k) \in \mathbb{R}^n$, thus we obtain
 
 \begin{equation}\label{quasi-NewtonEquation}
     H_{k+1} s_k = y_k \quad \text{or} \quad B_{k+1} y_k = s_k.
@@ -32,24 +32,96 @@ For the sake of simplicity, we introduce the notations $s_k = x_{k+1} - x_k$ and
 
 The fulfillment of the quasi-Newton equation is the distinguishing feature of quasi-Newton methods. This means that quasi-Newton methods, like steepest descent, require only the gradient of the objective function to be supplied at each iterate. \\
 The idea now is to find a convenient formula for updating the matrix H, which produces a matrix that satisfies the quasi-Newton equation and also carries other positive properties for the method. Instead of recomputing the approximate Hessian (or inverse Hessian) from scratch at every iteration, we apply a simple modification that combines the most recently observed information about the objective function with the existing knowledge embedded in our current Hessian approximation \cite[p.~139]{NocedalWright:2006}. \\
-There are different formulas for updating the matrix, which of course differentiates the quasi-Newton methods. Probably the best-known method is based on the BFGS update, where the updated matrix Bk+1 (or Hk+1) differs from its
-predecessor Bk (or Hk ) by a rank-2 matrix:
+There are different formulas for updating the matrix, which of course differentiates the quasi-Newton methods. Probably the best-known method is based on the BFGS update, where the updated matrix Bk+1 (or Hk+1) differs from its predecessor Bk (or Hk ) by a rank-2 matrix:
 
-\begin{equation*}
-    H^{BFGS}_{k+1} = H^{BFGS}_k + \frac{y_k y^{\mathrm{T}}_k}{s^{\mathrm{T}}_k y_k} - \frac{H^{BFGS}_k s_k s^{\mathrm{T}}_k H^{BFGS}_k}{s^{\mathrm{T}}_k H^{BFGS}_k s_k}
-\end{equation*}
+\begin{equation}\label{DirectBFGSformula}
+    H^{\mathrm{BFGS}}_{k+1} = H^{\mathrm{BFGS}}_k + \frac{y_k y^{\mathrm{T}}_k}{s^{\mathrm{T}}_k y_k} - \frac{H^{\mathrm{BFGS}}_k s_k s^{\mathrm{T}}_k H^{\mathrm{BFGS}}_k}{s^{\mathrm{T}}_k H^{\mathrm{BFGS}}_k s_k}
+\end{equation}
 
 or 
 
 \begin{equation}\label{InverseBFGSformula}
-    B^{BFGS}_{k+1} = \Big{(} I_{n \times n} - \frac{s_k y^{\mathrm{T}}_k}{s_k^{\mathrm{T}} y_k} \Big{)} B^{BFGS}_k \Big{(} I_{n \times n} - \frac{y_k s^{\mathrm{T}}_k}{s_k^{\mathrm{T}} y_k} \Big{)} + \frac{s_k s^{\mathrm{T}}_k}{s_k^{\mathrm{T}} y_k}.
+    B^{\mathrm{BFGS}}_{k+1} = \Big{(} I_{n \times n} - \frac{s_k y^{\mathrm{T}}_k}{s_k^{\mathrm{T}} y_k} \Big{)} B^{\mathrm{BFGS}}_k \Big{(} I_{n \times n} - \frac{y_k s^{\mathrm{T}}_k}{s_k^{\mathrm{T}} y_k} \Big{)} + \frac{s_k s^{\mathrm{T}}_k}{s_k^{\mathrm{T}} y_k}.
 \end{equation}
 
-There is a simpler rank-1
+There is a simpler rank-one
 update that maintains symmetry of the matrix and allows it to satisfy the secant equation.
-Unlike the rank-two update formulae, this symmetric-rank-1, or SR1, update does not
+Unlike the rank-two update formulae, this symmetric-rank-one, or SR1, update does not
 guarantee that the updated matrix maintains positive definiteness. Good numerical results
 have been obtained with algorithms based on SR1, so we derive it here and investigate its
 properties.
+
+The symmetric rank-one update has the general form
+
+\begin{equation*}
+    H_{k+1} = H_k + \sigma \, v v^{\mathrm{T}},
+\end{equation*}
+
+where $v \in \mathbb{R}^n$ and $\sigma \in \{-1,1\}$. The task now is to determine $v$ and $\sigma$ so that $H_{k+1}$ satisfies the quasi-Newton equation, \cref{quasi-NewtonEquation}. By substituting into \cref{quasi-NewtonEquation}, we obtain
+
+\begin{equation}\label{Derivation1}
+    H_k s_k + [\sigma \, v^{\mathrm{T}} s_k] v = y_k.
+\end{equation}
+
+Since the term in brackets is a scalar, $v$ must be a multiple of $y_k − H_k s_k$, i.e. $v = \delta (y_k − H_k s_k)$ for some $\delta \in \mathbb{R}$. By substituting this form of $v$ into \cref{Derivation1}, we obtain
+
+\begin{equation}\label{Derivation2}
+    (y_k − H_k s_k) = \sigma \delta^2 [s^{\mathrm{T}}_k (y_k − H_k s_k)](y_k − H_k s_k)
+\end{equation}
+
+and it is clear that this equation is satisfied if (and only if) we choose the parameters $\delta$ and $\sigma$ to be
+
+\begin{equation*}
+    \sigma = \operatorname{sgn} (s^{\mathrm{T}}_k (y_k − H_k s_k)), \quad \delta = \pm \lvert s^{\mathrm{T}}_k (y_k − H_k s_k) \rvert^{-\frac{1}{2}}.
+\end{equation*}
+
+Hence, the only symmetric rank-one updating formula that satisfies the secant equation is given by
+
+\begin{equation}\label{directSR1formula}
+    H^\mathrm{SR1}_{k+1} = H^\mathrm{SR1}_k + \frac{(y_k - H^\mathrm{SR1}_k s_k) (y_k - H^\mathrm{SR1}_k s_k)^{\mathrm{T}}}{(y_k - H^\mathrm{SR1}_k s_k)^{\mathrm{T}} s_k}
+\end{equation}
+
+By applying the Sherman–Morrison-Woodbury formula (cf. ), we obtain the corresponding update formula for the approximation of inverse Hessian ${\nabla^{2} f(x_{k+1})}^{-1}$:
+
+\begin{equation}\label{inverseSR1formula}
+    B^\mathrm{SR1}_{k+1} = B^\mathrm{SR1}_k + \frac{(s_k - B^\mathrm{SR1}_k y_k) (s_k - B^\mathrm{SR1}_k y_k)^{\mathrm{T}}}{(s_k - B^\mathrm{SR1}_k y_k)^{\mathrm{T}} y_k}.
+\end{equation}
+
+SR1 update satisfies the hereditary property: Hiyj = sj ,j < i.
+
+By the way, (5.1.21) is a general Broyden rank-one update in which, particularly, if v = yk, (5.1.21) is called the Broyden rank-one update presented
+by Broyden (1965) for solving systems of nonlinear equations.
+It is easy to see in that even if $H^\mathrm{SR1}_k$ is positive definite, $H^\mathrm{SR1}_{k+1}$ may not have the same property (this holds also for $B^\mathrm{SR1}_k$ and $B^\mathrm{SR1}_{k+1}$). If and only if $(y_k - H^\mathrm{SR1}_k s_k)^{\mathrm{T}} s_k > 0$, SR1 update retains positive definiteness. However, this condition is difficult to guarantee. This means that $H^\mathrm{SR1}_{k+1}$ or $B^\mathrm{SR1}_{k+1}$ may no longer be invertible. Moreover, $d_{k+1} = -{H^\mathrm{SR1}_{k+1}}^{-1} \nabla f(x_{k+1}) = -B^\mathrm{SR1}_{k+1} \nabla f(x_{k+1})$ is not necessarily a descent direction. \\
+The main drawback of the SR1 update formula is that the denominator in \cref{directSR1formula} or \cref{inverseSR1formula} can vanish. In fact, even when the objective function is convex and quadratic, there may be steps on which there is no symmetric rank-one update that satisfies the quasi-Newton equation \cref{quasi-NewtonEquation}. This disadvantage results in serious numerical difficulties, which restrict the applications of the SR1 method. \\ 
+By reasoning in terms of $H^\mathrm{SR1}_k$ (similar arguments can be applied to $B^\mathrm{SR1}_k$), we see that there are three cases:
+
+\begin{enumerate}
+    \item If $(y_k - H^\mathrm{SR1}_k s_k)^{\mathrm{T}} s_k \neq 0$, then there is a unique rank-one updating formula satisfying \cref{quasi-NewtonEquation}, and that it is given by \cref{directSR1formula}.
+    \item If $y_k = H^\mathrm{SR1}_k s_k$, then $H^\mathrm{SR1}_{k+1} = H^\mathrm{SR1}_k$ is the only updating formula satisfying \cref{quasi-NewtonEquation}.
+    \item If $y_k \neq H^\mathrm{SR1}_k s_k$ and $(y_k - H^\mathrm{SR1}_k s_k)^{\mathrm{T}} s_k = 0$, then \cref{Derivation2} shows that there is no symmetric rank-one updating formula satisfying \cref{quasi-NewtonEquation}.
+\end{enumerate}
+
+The last case suggests that numerical instabilities and even breakdown of the method can occur, which means that a rank-one update does not provide enough freedom to develop a matrix with all the desired characteristics, and that a rank-two correction is required. This reasoning leads us back to the BFGS method, in which positive definiteness (and thus non-singularity) of all Hessian approximations is guaranteed if the so called curvature condition, which requires
+
+\begin{equation}\label{CurvatureCondition}
+    s^{\mathrm{T}}_k y_k > 0,
+\end{equation}
+
+is satisfied. Nevertheless, the SR1 formula has the following advantages:
+
+\begin{enumerate}
+    \item A simple safeguard seems to adequately prevent the breakdown of the method and the occurrence of numerical instabilities.
+    \item The matrices generated by the SR1 formula tend to be good approximations to the true Hessian matrix.
+    \item In quasi-Newton methods for constrained problems, it may not be possible to impose \cref{CurvatureCondition}, and thus the BFGS update, \cref{DirectBFGSformula}, is not recommended. 
+\end{enumerate}
+
+
+The vanishing of the denominator in \cref{directSR1formula} or \cref{inverseSR1formula} is a topic, which deserves more research how to modify these updates such that they possess positive definiteness. For that we introduce a strategy to prevent the SR1 method from breaking down. It has been observed in practice that SR1 performs well simply by skipping the update if the denominator is small. 
+
+\begin{equation}\label{CautiousSR1}
+    B^\mathrm{CSR1}_{k+1} = \begin{cases} \text{using \cref{inverseSR1formula}}, & \; \lvert (s_k - B^\mathrm{SR1}_k y_k)^{\mathrm{T}} y_k \lvert \geq r \, \lVert y_k \rVert \lVert s_k - B^\mathrm{SR1}_k y_k \rVert , \\ B^\mathrm{CSR1}_k, & \; \text{otherwise}, \end{cases}
+\end{equation}
+
+where $r \in (0, 1)$ is a small number, e.g. $r = 10^{−8}$. Most implementations of the SR1 method use a skipping rule of this kind. The condition $(s_k - B^\mathrm{SR1}_k y_k)^{\mathrm{T}} y_k$ occurs infrequently, since it requires certain vectors to be aligned in a specific way. When it occurs, skipping the update appears to have no negative effects on the iteration, since the skipping condition implies that $y^{\mathrm{T}}_k \tilde{G}^{-1} y_k \approx y^{\mathrm{T}}_k B^\mathrm{SR1}_k y_k$, where $\tilde{G}$ is the average Hessian over the last step, meaning that the curvature of $B^\mathrm{SR1}_k$ along $y_k$ is already correct. 
 
 The sequence of Hessian approximations generated by the SR1 method converges to the true Hessian under mild conditions, in theory; in practice, the approximate Hessians generated by the SR1 method show faster progress towards the true Hessian than do popular alternatives (BFGS or DFP), in preliminary numerical experiments.
