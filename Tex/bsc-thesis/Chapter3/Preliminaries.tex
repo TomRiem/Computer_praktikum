@@ -19,3 +19,15 @@ where $\mathcal{M}$ is a Riemannian manifold. From now on we assume that $\mathc
 \end{equation}
 
 with $0 < c_1 < c_2 < 1$.
+
+\begin{equation}\label{TransportedOperator}
+    \widetilde{\mathcal{H}}_k = \parallelTransport{x_k}{x_{k+1}} \circ \mathcal{H}_k \circ \parallelTransport{x_{k+1}}{x_k} \colon \; \tangent{x_{k+1}} \to \tangent{x_{k+1}},
+\end{equation}
+
+\begin{equation}\label{directRiemannianBFGSFormula}
+    \mathcal{H}^{RBFGS}_{k+1} [\cdot] = \widetilde{\mathcal{H}}^{RBFGS}_k [\cdot] + \frac{y_k y^{\flat}_k[\cdot]}{s^{\flat}_k [y_k]} - \frac{\widetilde{\mathcal{H}}^{RBFGS}_k [s_k] s^{\flat}_k (\widetilde{\mathcal{H}}^{RBFGS}_k [\cdot])}{s^{\flat}_k (\widetilde{\mathcal{H}}^{RBFGS}_k [s_k])}.
+\end{equation}
+
+\begin{equation}\label{RiemannianInverseBFGSFormula}
+        \mathcal{B}^{RBFGS}_{k+1} [\cdot] = \Big{(} \id_{\tangent{x_{k+1}}}[\cdot] - \frac{s_k y^{\flat}_k [\cdot]}{s^{\flat}_k [y_k]} \Big{)} \widetilde{\mathcal{B}}^{RBFGS}_k [\cdot] \Big{(} \id_{\tangent{x_{k+1}}}[\cdot] - \frac{y_k s^{\flat}_k [\cdot]}{s^{\flat}_k [y_k]} \Big{)} + \frac{s_k s^{\flat}_k [\cdot]}{s^{\flat}_k [y_k]}.
+\end{equation}

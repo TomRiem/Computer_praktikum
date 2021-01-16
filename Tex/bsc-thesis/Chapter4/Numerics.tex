@@ -1,0 +1,13 @@
+\chapter{Numerics}
+
+the Rayleigh quotient minimization problem on the sphere $\mathbb{S}^{n-1}$. For a symmetric matrix $A \in \mathbb{R}^{n \times n}$, the unit-norm eigenvector, $v \in \mathbb{R}^n$, corresponding to the smallest eigenvalue, defines the two global minima, $\pm v$, of the Rayleigh quotient  
+\begin{equation}\label{RayleighQuotient}
+    \begin{split}
+        f \colon \; \mathbb{S}^{n-1} & \to \mathbb{R} \\
+        x & \mapsto x^{\mathrm{T}} A x 
+    \end{split}
+\end{equation}   
+with its gradient 
+\begin{equation*}
+    \operatorname{grad} f(x) = 2(Ax - x x^{\mathrm{T}} A x).
+\end{equation*}
