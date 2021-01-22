@@ -1,33 +1,45 @@
 \section{Preliminaries}
 
-The goal in this chapter is to solve Riemannian optimization problems, which consider finding an optimum of a real-valued function $f$ defined on a Riemannian manifold, i.e.
+From now on we consider Riemannian optimization problems, which consider finding an optimum of a real-valued function $f$ defined on a Riemannian manifold, i.e.
 \begin{equation}\label{RiemannianOptimizationProblem}
-    \min f(x), \quad x \in \mathcal{M}
+    \min f(x), \quad x \in \mathcal{M},
 \end{equation}
 where $\mathcal{M}$ is a Riemannian manifold. From now on we assume that $\mathcal{M}$ is a $n$-dimensional geodesically complete Riemannian manifold. We further assume that the manifold $\mathcal{M}$ is embedded in a real-valued space (e.g. $\mathcal{M} \subseteq \mathbb{R}^m$) and connected. Further we assume that $f \colon \; \mathcal{M} \to \mathbb{R}$ is a twice continuously differentiable function, i.e. $f \in C^2(\mathcal{M})$. \\
-
+Riemannian quasi-Newton methods belong to the class of Riemannian line search methods in which, similar to their Euclidean counterparts, at first a tangent vector $\eta_k \in \tangent{x_k}$ as search direction is determined and then a suitable stepsize $\alpha_k > 0$ is searched for along a curve $\gamma(\alpha) = \retract{x_k}(\alpha \eta_k)$ on the manifold $\mathcal{M}$, which is defined by a chosen retraction $\retractionSymbol \colon \; \tangent{} \to \mathcal{M}$ (see \cite[Definition~4.1.1]{AbsilMahonySepulchre:2008}). Therefore the choice of a computationally efficient retraction is an important decision in the design of high-performance numerical algorithms on manifolds \cite[p.~54]{AbsilMahonySepulchre:2008}. We assume that the exponential map $\expOp \colon \; \tangent{} \to \mathcal{M}$ (see \cite[p.~102-103]{AbsilMahonySepulchre:2008}), which is s retraction, is always available on the manifold $\mathcal{M}$ and used as retraction. This in turn means that we use the following iterative update scheme:
 \begin{equation}\label{RiemannianIterativeUpdateScheme}
-    x_{k+1} = \exponential{x_k}(\alpha_k \eta_k),
+    x_{k+1} = \exponential{x_k}(\alpha_k \eta_k).
 \end{equation}
-
-\begin{equation}\label{RiemannianWolfeConditions1}
-    f( \exponential{x_k}(\alpha_k \eta_k)) \leq f(x_k) + c_1 \alpha_k g_{x_k} (\operatorname{grad} f(x_k), \eta_k)
-\end{equation}
-
-\begin{equation}\label{RiemannianWolfeConditions2.2}
-    g_{\exponential{x_k}(\alpha_k \eta_k)} (\operatorname{grad} f(\exponential{x_k}(\alpha_k \eta_k)), \parallelTransportDir{x_k}{\alpha_k \eta_k}(\eta_k)) \geq c_2 g_{x_k} (\operatorname{grad} f(x_k), \eta_k).
-\end{equation}
-
-with $0 < c_1 < c_2 < 1$.
-
-\begin{equation}\label{TransportedOperator}
-    \widetilde{\mathcal{H}}_k = \parallelTransport{x_k}{x_{k+1}} \circ \mathcal{H}_k \circ \parallelTransport{x_{k+1}}{x_k} \colon \; \tangent{x_{k+1}} \to \tangent{x_{k+1}},
-\end{equation}
-
+In Riemannian quasi-Newton methods, the search direction $\eta_k \in \tangent{x_k}$ is obtained by 
+\begin{equation*}
+    \eta_k = -{\mathcal{H}_k}^{-1}[\operatorname{grad} f(x_k)] = -\mathcal{B}_k [\operatorname{grad} f(x_k)],
+\end{equation*}
+where $\operatorname{grad} f(x_k)$ is the Riemannian gradient of the objective function $f$ at $x_k \in \mathcal{M}$ and $\mathcal{H}_k, \mathcal{B}_k \colon \; \tangent{x_k} \to \tangent{x_k}$ are linear self-adjoint operators and ${\mathcal{H}_k}^{-1} [\cdot] = \mathcal{B}_k [\cdot]$. Here $\mathcal{H}_k [\cdot]$ tries to approximate the action of the Riemannian Hessian $\operatorname{Hess} f(x_k) [\cdot]$ (see \cite[Definition~5.5.1]{AbsilMahonySepulchre:2008}) and $\mathcal{H}_k [\cdot]$ approximates the action of ${\operatorname{Hess} f(x_k)}^{-1} [\cdot]$. At the end of each iteration, these operators are updated to new operators $\mathcal{H}_{k+1}, \mathcal{B}_{k+1} \colon \; \tangent{x_{k+1}} \to \tangent{x_{k+1}}$ on the upcoming tangent space. It is required that these satisfy some form of the Riemannian quasi-Newton equation. For this we need the parallel transport $\parallelTransport{x}{y} \colon \; \tangent{x} \to \tangent{y}$ (see \cite[p.~169-170]{AbsilMahonySepulchre:2008}), which is a vector transport to which the exponential map $\expOp$ is the associated retraction. By introducing the tangent vector $s_k = \parallelTransportDir{x_k}{\alpha_k \eta_k}(\alpha_k \eta_k) \in \tangent{x_{k+1}}$, which is the transported search direction times the stepsize and thus represents the connection between the two iterates $x_k$ and $x_{k+1}$, and the tangent vector $y_k = \operatorname{grad} f(x_{k+1}) - \parallelTransportDir{x_k}{\alpha_k \eta_k}(\operatorname{grad} f(x_k)) \in \tangent{x_{k+1}}$, which represents the difference of the gradients in $\tangent{x_{k+1}}$, the Riemannian quasi-Newton equation is given by 
+\begin{equation*}
+    \mathcal{H}_{k+1} [s_k] = y_k \quad \text{or} \quad \mathcal{B}_{k+1} [y_k] = s_k.
+\end{equation*}
+As in the Euclidean case, there are different update formulae for operators so that they satisfy the Riemannian quasi-Newton equation. In (almost) all of them, the previously collected information in $\mathcal{H}_k [\cdot]$ or $\mathcal{B}_k [\cdot]$ is taken over, but these are an operators on the tangent space $\tangent{x_k}$. To overcome this obstacle, we transport this operator into the appropriate tangent space $\tangent{x_{k+1}}$, i.e.
+\begin{equation*}
+    \widetilde{\mathcal{H}}_k = \parallelTransport{x_k}{x_{k+1}} \circ \mathcal{H}_k \circ \parallelTransport{x_{k+1}}{x_k} \colon \; \tangent{x_{k+1}} \to \tangent{x_{k+1}}.
+\end{equation*}
+We use the same method and notation for $\widetilde{\mathcal{B}}_k \colon \; \tangent{x_{k+1}} \to \tangent{x_{k+1}}$. The idea now is to find a convenient update formula for operators, which can be written with $\widetilde{\mathcal{H}}_k$ or $\widetilde{\mathcal{B}}_k$ and $y_k,s_k$. To be able to create rank-one operators, we introduce the musical isomorphism $\flat \colon \; \tangent{x_{k+1}} \ni \eta_{x_{k+1}} \mapsto \eta^{\flat}_{x_{k+1}} \in \cotangent{x_{k+1}}$ (see ). Put simply, it means: $\eta^{\flat}_{x_{k+1}} \in \cotangent{x_{k+1}}$ represents the ﬂat of $\eta_{x_{k+1}} \in \tangent{x_{k+1}}$, i.e., $\eta^{\flat}_{x_{k+1}} \colon \; \tangent{x_{k+1}} \to \mathbb{R}, \;  \xi_{x_{k+1}} \mapsto \eta^{\flat}_{x_{k+1}}[\xi_{x_{k+1}}] = g_{x_{k+1}} (\eta_{x_{k+1}}, \xi_{x_{k+1}})$. This generalizes the notation of the transpose. As noted earlier, there are several quasi-Newton update formulae for operators that have been generalized from the Euclidean case to the Riemannian setup. The generalization of the efficient BFGS update is given by
 \begin{equation}\label{directRiemannianBFGSFormula}
-    \mathcal{H}^{RBFGS}_{k+1} [\cdot] = \widetilde{\mathcal{H}}^{RBFGS}_k [\cdot] + \frac{y_k y^{\flat}_k[\cdot]}{s^{\flat}_k [y_k]} - \frac{\widetilde{\mathcal{H}}^{RBFGS}_k [s_k] s^{\flat}_k (\widetilde{\mathcal{H}}^{RBFGS}_k [\cdot])}{s^{\flat}_k (\widetilde{\mathcal{H}}^{RBFGS}_k [s_k])}.
+    \mathcal{H}^{RBFGS}_{k+1} [\cdot] = \widetilde{\mathcal{H}}^{RBFGS}_k [\cdot] + \frac{y_k y^{\flat}_k[\cdot]}{s^{\flat}_k [y_k]} - \frac{\widetilde{\mathcal{H}}^{RBFGS}_k [s_k] s^{\flat}_k (\widetilde{\mathcal{H}}^{RBFGS}_k [\cdot])}{s^{\flat}_k (\widetilde{\mathcal{H}}^{RBFGS}_k [s_k])}
 \end{equation}
-
+and the update for the approximation of the Hessian inverse is given by
 \begin{equation}\label{RiemannianInverseBFGSFormula}
         \mathcal{B}^{RBFGS}_{k+1} [\cdot] = \Big{(} \id_{\tangent{x_{k+1}}}[\cdot] - \frac{s_k y^{\flat}_k [\cdot]}{s^{\flat}_k [y_k]} \Big{)} \widetilde{\mathcal{B}}^{RBFGS}_k [\cdot] \Big{(} \id_{\tangent{x_{k+1}}}[\cdot] - \frac{y_k s^{\flat}_k [\cdot]}{s^{\flat}_k [y_k]} \Big{)} + \frac{s_k s^{\flat}_k [\cdot]}{s^{\flat}_k [y_k]}.
 \end{equation}
+These update formulae produce positive definite self-adjoint operators $\mathcal{H}^{RBFGS}_{k+1} [\cdot]$ or $\mathcal{B}^{RBFGS}_{k+1} [\cdot]$, if the operator $\mathcal{H}^{RBFGS}_k [\cdot]$ or $\mathcal{B}^{RBFGS}_k [\cdot]$ is positive definite self-adjoint, an isometric vector transport (which is the parallel transport) is used in the definitions of s,y and B, and the Riemannian curvature condition holds, which requires:
+\begin{equation}\label{RiemannianCurvatureCondition}
+    g_{x_{k+1}}(s_k,y_k) > 0.
+\end{equation}
+In the setup of this work, the Riemannian curvature condition, \cref{RiemannianCurvatureCondition}, is satisfied if a stepsize $\alpha_k > 0$ is chosen that satisfies the following version of the generalization of the Wolfe conditions:
+\begin{equation}\label{RiemannianWolfeConditions1}
+    f( \exponential{x_k}(\alpha_k \eta_k)) \leq f(x_k) + c_1 \alpha_k g_{x_k} (\operatorname{grad} f(x_k), \eta_k)
+\end{equation}
+and 
+\begin{equation}\label{RiemannianWolfeConditions2.2}
+    g_{\exponential{x_k}(\alpha_k \eta_k)} (\operatorname{grad} f(\exponential{x_k}(\alpha_k \eta_k)), \parallelTransportDir{x_k}{\alpha_k \eta_k}(\eta_k)) \geq c_2 g_{x_k} (\operatorname{grad} f(x_k), \eta_k).
+\end{equation}
+with $0 < c_1 < c_2 < 1$.
+

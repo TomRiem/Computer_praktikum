@@ -25,7 +25,6 @@ end
 io = IOBuffer()
 
 for T in [BFGS(), InverseBFGS()], n in [100, 300]
-
     b = @benchmark run_rayleigh_experiment($T, $(WolfePowellLineseach(ExponentialRetraction(), ParallelTransport())), $n) samples = 10
     show(io, "text/plain", b)
     s = String(take!(io))
