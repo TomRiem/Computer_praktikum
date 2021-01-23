@@ -1,7 +1,7 @@
 using Manopt, Manifolds, ManifoldsBase, Random, LinearAlgebra, BenchmarkTools
 Random.seed!(42)
 
-function run_rayleigh_experiment(T::AbstractQuasiNewtonUpdateRule, S::Stepsize, n::Int)
+function run_rayleigh_experiment(T::AbstractQuasiNewtonUpdateRule, n::Int)
     A = randn(n, n)
     A = (A + A') / 2
     F(X::Array{Float64,1}) = X' * A * X
@@ -15,7 +15,6 @@ function run_rayleigh_experiment(T::AbstractQuasiNewtonUpdateRule, S::Stepsize, 
         x;
         memory_size = -1,
         direction_update = T,
-        step_size = S,
         stopping_criterion = StopWhenAny(
             StopAfterIteration(max(1000)),
             StopWhenGradientNormLess(10^(-6)),
@@ -24,8 +23,8 @@ function run_rayleigh_experiment(T::AbstractQuasiNewtonUpdateRule, S::Stepsize, 
 end
 io = IOBuffer()
 
-for T in [BFGS(), InverseBFGS(), SR1(), InverseSR1(), SR1(10^(-8)), InverseSR1(10^(-8))], n in [100, 300]
-    b = @benchmark run_rayleigh_experiment($T, $(WolfePowellLineseach(ExponentialRetraction(), ParallelTransport())), $n) samples = 10
+for T in [BFGS(), InverseBFGS(), SR1(), InverseSR1()], n in [100, 300]
+    b = @benchmark run_rayleigh_experiment($T, $n) samples=10 evals=5 seconds=600
     show(io, "text/plain", b)
     s = String(take!(io))
     println("Benchmarking $(n), $(T):\n", s, "\n\n")

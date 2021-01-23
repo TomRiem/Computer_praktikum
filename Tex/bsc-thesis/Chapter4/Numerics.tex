@@ -11,3 +11,46 @@ with its gradient
 \begin{equation*}
     \operatorname{grad} f(x) = 2(Ax - x x^{\mathrm{T}} A x).
 \end{equation*}
+
+\begin{algorithm}[H]
+    \caption{Inverse SR1 Method}\label{RiemannianSR1Method}
+    \begin{algorithmic}[1]
+        \State Continuously differentiable real-valued function $f$ on $\mathbb{R}^n$, bounded below; initial iterate $x_0 \in \mathbb{R}^n$; initial $\spd$ matrix $B^{\mathrm{SR1}}_0 \in \mathbb{R}^{n \times n}$; convergence tolerance $\varepsilon > 0$. Set $k = 0$.
+        \While{$\lVert \nabla f(x_k) \rVert > \varepsilon$}
+            \State Compute the search direction $d_k = - B^{\mathrm{SR1}}_k \nabla f(x_k)$.
+            \State Determine a stepsize $\alpha_k > 0$ which satisfies \cref{RiemannianWolfeConditions1} and \cref{RiemannianWolfeConditions2.2}.
+            \State Set $x_{k+1} = x_k + \alpha_k d_k$.
+            \State Set $s_k = x_{k+1} - x_k$ and $y_k = \nabla f(x_{k+1}) - \nabla f(x_k)$.
+            \State Compute $B^{\mathrm{SR1}}_{k+1} \in \mathbb{R}^{n \times n}$ by means of \cref{inverseSR1formula}. 
+            \State Set $k = k+1$.
+        \EndWhile
+        \State \textbf{Return} $x_k$.
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{table}[H]\label{tab:Results}
+    \resizebox{\textwidth}{!}{
+        \begin{tabular}{l l l l l }
+            \toprule
+            Manifold & \multicolumn{2}{c}{$\mathbb{S}^{99}$} & \multicolumn{2}{c}{$\mathbb{S}^{299}$}   \\ 
+            \midrule
+            & Time & Iterations & Time & Iterations  \\ 
+            \midrule
+            BFGS & $0$ & $79$ & $0$ & $88$  \\ 
+            \midrule
+            Inverse BFGS & $79$ & $0$ & $0$ & $88$   \\
+            \midrule
+            SR1 & $0$ & $106$ & $0$ & $317$  \\ 
+            \midrule
+            Inverse SR1 & $0$ & $115$ & $0$ & $263$   \\
+            \midrule
+            Stable SR1 & $0$ & $0$ & $0$ & $0$  \\ 
+            \midrule
+            Inverse Stable SR1 & $0$ & $0$ & $0$ & $0$   \\
+            \bottomrule
+        \end{tabular}
+    }
+    \caption{Comparison of the quasi-Newton methods.}
+\end{table}
+$n = 100$ SR1: 3 runs failed, InverseSR1: 1 run failed
+$n = 100$ SR1: 5 runs failed, InverseSR1: 5 runs failed

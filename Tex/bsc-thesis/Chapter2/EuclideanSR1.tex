@@ -77,7 +77,6 @@ The last case suggests that numerical instabilities and even a breakdown of the 
     \item In quasi-Newton methods for constrained problems, it may not be possible to impose \cref{CurvatureCondition}, and thus the BFGS update, \cref{DirectBFGSformula}, is not recommended. 
 \end{enumerate}
 The vanishing of the denominator in \cref{directSR1formula} or \cref{inverseSR1formula} is a topic, which deserves more research. For that we introduce a strategy to prevent the SR1 method from breaking down. It has been observed in practice that SR1 performs well simply by skipping the update if the denominator is small. More specifically, the update \cref{directSR1formula} is applied only if 
-
 \begin{equation}\label{CautiousSR1}
     \lvert (y_k - H^\mathrm{SR1}_k s_k)^{\mathrm{T}} s_k \lvert \; \geq \; r \; \lVert s_k \rVert \lVert y_k - H^\mathrm{SR1}_k s_k \rVert 
 \end{equation}
