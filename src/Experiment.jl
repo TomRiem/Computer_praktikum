@@ -24,22 +24,10 @@ function run_rayleigh_experiment(T::AbstractQuasiNewtonUpdateRule, S::Stepsize, 
 end
 io = IOBuffer()
 
-for T in [BFGS(), InverseBFGS()], n in [100, 300]
+for T in [BFGS(), InverseBFGS(), SR1(), InverseSR1(), SR1(10^(-8)), InverseSR1(10^(-8))], n in [100, 300]
     b = @benchmark run_rayleigh_experiment($T, $(WolfePowellLineseach(ExponentialRetraction(), ParallelTransport())), $n) samples = 10
     show(io, "text/plain", b)
     s = String(take!(io))
     println("Benchmarking $(n), $(T):\n", s, "\n\n")
 end
 
-for T in [SR1(), InverseSR1(), StableSR1(), InverseStableSR1()],
-    S in [
-        WolfePowellLineseach(ExponentialRetraction(), ParallelTransport()),
-        ConstantStepsize(1),
-    ],
-    n in [100, 300]
-
-    b = @benchmark run_rayleigh_experiment($T, $S, $n) samples = 10
-    show(io, "text/plain", b)
-    s = String(take!(io))
-    println("Benchmarking $(n), $(T), $(S):\n", s, "\n\n")
-end
