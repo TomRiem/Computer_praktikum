@@ -23,8 +23,8 @@ function run_rayleigh_experiment(T::AbstractQuasiNewtonUpdateRule, n::Int)
 end
 io = IOBuffer()
 
-for T in [BFGS(), InverseBFGS(), SR1(), InverseSR1()], n in [100, 300]
-    b = @benchmark run_rayleigh_experiment($T, $n) samples=10 evals=5 seconds=600
+for T in [InverseSR1(), SR1(), BFGS(), InverseBFGS()], n in [100, 300]
+    b = @benchmark run_rayleigh_experiment($T, $n) samples=10 seconds=60
     show(io, "text/plain", b)
     s = String(take!(io))
     println("Benchmarking $(n), $(T):\n", s, "\n\n")

@@ -1,0 +1,3 @@
+\chapter{Numerics}
+
+This work summarizes how the Symmetric Rank-One update formula is generalized for the Riemannian setup. An implementation of a Riemannian SR1 quasi-Newton method and an inverse Riemannian SR1 quasi-Newton method was undertaken in the package \lstinline!Manopt.jl!. An experiment was conducted in the programming language Julia in which the RSR1 method was found to converge with a reasonable number of iterations and in a reasonable time under certain conditions. But this method is not nearly as efficient as the RBFGS method, which is based on a rank-two update. Nevertheless, there is further interest in investigating the Riemannian SR1 update, as it can also be used in other algorithms such as the Riemannian trust region method. 

@@ -1,6 +1,6 @@
 \chapter{Numerics}
 
-the Rayleigh quotient minimization problem on the sphere $\mathbb{S}^{n-1}$. For a symmetric matrix $A \in \mathbb{R}^{n \times n}$, the unit-norm eigenvector, $v \in \mathbb{R}^n$, corresponding to the smallest eigenvalue, defines the two global minima, $\pm v$, of the Rayleigh quotient  
+To test the performance of the Riemannian SR1 quasi-Newton method, implemented in the package \lstinline!Manopt.jl!, we consider the Rayleigh quotient minimization problem on the sphere $\mathbb{S}^{n-1}$. For a symmetric matrix $A \in \mathbb{R}^{n \times n}$, the unit-norm eigenvector, $v \in \mathbb{R}^n$, corresponding to the smallest eigenvalue, defines the two global minima, $\pm v$, of the Rayleigh quotient  
 \begin{equation}\label{RayleighQuotient}
     \begin{split}
         f \colon \; \mathbb{S}^{n-1} & \to \mathbb{R} \\
@@ -11,23 +11,30 @@ with its gradient
 \begin{equation*}
     \operatorname{grad} f(x) = 2(Ax - x x^{\mathrm{T}} A x).
 \end{equation*}
-
-\begin{algorithm}[H]
-    \caption{Inverse SR1 Method}\label{RiemannianSR1Method}
-    \begin{algorithmic}[1]
-        \State Continuously differentiable real-valued function $f$ on $\mathbb{R}^n$, bounded below; initial iterate $x_0 \in \mathbb{R}^n$; initial $\spd$ matrix $B^{\mathrm{SR1}}_0 \in \mathbb{R}^{n \times n}$; convergence tolerance $\varepsilon > 0$. Set $k = 0$.
-        \While{$\lVert \nabla f(x_k) \rVert > \varepsilon$}
-            \State Compute the search direction $d_k = - B^{\mathrm{SR1}}_k \nabla f(x_k)$.
-            \State Determine a stepsize $\alpha_k > 0$ which satisfies \cref{RiemannianWolfeConditions1} and \cref{RiemannianWolfeConditions2.2}.
-            \State Set $x_{k+1} = x_k + \alpha_k d_k$.
-            \State Set $s_k = x_{k+1} - x_k$ and $y_k = \nabla f(x_{k+1}) - \nabla f(x_k)$.
-            \State Compute $B^{\mathrm{SR1}}_{k+1} \in \mathbb{R}^{n \times n}$ by means of \cref{inverseSR1formula}. 
-            \State Set $k = k+1$.
-        \EndWhile
-        \State \textbf{Return} $x_k$.
-    \end{algorithmic}
-\end{algorithm}
-
+To apply the RSR1 method, implemented in \lstinline!Manopt.jl!, to the optimization problem defined by the cost function \cref{RayleighQuotient} for $n=100$, \cref{RayleighCode} must be executed in Julia. The problem is defined by setting \lstinline!A_symm = ( A + A' ) / 2!, where the elements of \lstinline!A! are drawn from the standard normal distribution using Julia’s \lstinline!randn(n,n)! with seed \lstinline!42!. With \lstinline!random_point(M)!, a random point is created on the given manifold \lstinline!M!. The stopping criterion requires to abort the method, that either the norm of the gradient is less than $10^{-6}$ or $1000$ iterations have been run. \\
+\begin{lstlisting}[caption={The Rayleigh quotient minimization experiment in Julia for $n = 100$.}, label={RayleighCode}]
+    using Manopt, Manifolds, Random
+    Random.seed!(42)
+    n = 100
+    A = randn(n,n)
+    A_symm = ( A + A' ) / 2
+    M = Sphere(n - 1)
+    F(X::Array{Float64,1}) = X' * A_symm * X
+    grad_F(X::Array{Float64,1}) = 2 * ( A_symm * X - X * X' * A_symm * X )
+    x = random_point(M)
+    
+    quasi_Newton(M, 
+        F, 
+        grad_F, 
+        x; 
+        memory_size = -1, 
+        direction_update = SR1(),
+        stopping_criterion = StopWhenAny(
+            StopAfterIteration(max(1000)),
+            StopWhenGradientNormLess(10^(-6)),
+        )
+\end{lstlisting}
+To test the performance, we execute an experiment in Julia, where \cref{RayleighCode} depending on the parameter \lstinline!n! is used. We compare the average number of iterations per call and the average time needed per call of the RSR1, the inverse RSR1, the RBFGS and the inverse RBFGS method, which are all implemented in the package \lstinline!Manopt.jl!. All methods follow the sequence of \cref{RiemannianSR1Method}, only at the end the corresponding operator update of the method is used, i.e. the RBFGS method uses \cref{directRiemannianBFGSFormula}, the inverse RBFGS method uses \cref{RiemannianInverseBFGSFormula}, the RSR1 method uses \cref{RiemannianDirectSR1formula} and the inverse RSR1 method uses \cref{RiemannianInverseSR1formula}. In all methods, a stepsize $\alpha_k > 0$ is determined in each iteration that fulfills \cref{RiemannianWolfeConditions1} and \cref{RiemannianWolfeConditions2.2}, with $c_1 = 10^{−4}$ and $c_2 = 0.999$. The numerical experiment is implemented in the toolbox \lstinline!Manopt.jl!. It runs on a Lenovo ThinkPad L490, 64 bit Windows system, 1.8 Ghz Intel Core i7-8565U, 32 GB RAM, with Julia 1.5.2.
 \begin{table}[H]\label{tab:Results}
     \resizebox{\textwidth}{!}{
         \begin{tabular}{l l l l l }
@@ -36,21 +43,21 @@ with its gradient
             \midrule
             & Time & Iterations & Time & Iterations  \\ 
             \midrule
-            BFGS & $0$ & $79$ & $0$ & $88$  \\ 
+            RBFGS & $248.525 \, \mathrm{ms}$ & $79$ & $2.318 \, \mathrm{s}$ & $88$  \\ 
             \midrule
-            Inverse BFGS & $79$ & $0$ & $0$ & $88$   \\
+            Inverse RBFGS & $97.434 \, \mathrm{ms}$ & $79$ & $888.005 \, \mathrm{ms}$ & $88$   \\
             \midrule
-            SR1 & $0$ & $106$ & $0$ & $317$  \\ 
+            RSR1 & $450.167 \, \mathrm{ms}$ & $105$ & $5.630 \, \mathrm{s}$ & $295$  \\ 
             \midrule
-            Inverse SR1 & $0$ & $115$ & $0$ & $263$   \\
-            \midrule
-            Stable SR1 & $0$ & $0$ & $0$ & $0$  \\ 
-            \midrule
-            Inverse Stable SR1 & $0$ & $0$ & $0$ & $0$   \\
+            Inverse RSR1 & $336.362 \, \mathrm{ms}$ & $115$ & $3.737 \, \mathrm{s}$ & $309$   \\
             \bottomrule
         \end{tabular}
     }
     \caption{Comparison of the quasi-Newton methods.}
 \end{table}
-$n = 100$ SR1: 3 runs failed, InverseSR1: 1 run failed
-$n = 100$ SR1: 5 runs failed, InverseSR1: 5 runs failed
+\cref{tab:Results} contains the results of the various quasi-Newton methods on $\mathbb{S}^{99}$ and $\mathbb{S}^{299}$. For the time measurement the package BenchmarkTools.jl was used. The time was measured with a benchmark of $10$ samples and $1$ evaluation per sample using a random point on the manifold. The iterations are the average of the measured iterations from $10$ random runs. \\
+We note that the RSR1 method was aborted twice on the manifold $\mathbb{S}^{99}$ and three times on the manifold $\mathbb{S}^{299}$, because the norm of the gradient of $f$ was not smaller than $10^{-6}$ until $1000$ iterations. These results were not taken into account in the calculation of the average iterations and are not considered valid. A total of $10$ runs were made in which the RSR1 method stopped due to the norm of the gradient. This occurrence is not surprising, since no convergence statements are known about the Riemannian SR1 quasi-Newton method and one cannot generally assume global convergence. \\
+In the results from \cref{tab:Results}, it is immediately apparent that the inverse RBFGS method is the clear winner. Both the RBFGS method and the inverse RBFGS method need less time and fewer iterations for both manifolds than the RSR1 and the inverse RSR1 method. This is not very surprising as the BFGS method is considered the most efficient quasi-Newton method in the Euclidean case. \\
+The lower number of iterations can be explained by the fact that by choosing a stepsize $\alpha_k > 0$ that satisfies the Wolfe conditions, the Riemannian curvature condition, \cref{RiemannianCurvatureCondition}, is satisfied and thus both RBFGS methods consistently produce positive definite operators. This in turn leads to the fact that $\eta_k$ is a descent direction in each iteration, which leads to a steady descent of the objective function $f$. This, of course, favours faster convergence. In the RSR1 and the inverse RSR1 method, this property is not given, which seems to be important, since on $\mathbb{S}^{299}$ the RSR1 and the inverse RSR1 method need three times more iterations than the RBFGS and inverse RBFGS method. \\
+The large time difference can be attributed to the higher number of iterations on the one hand and on the other hand it can be more difficult to find a suitable stepsize if $\eta_k$ is not a descent direction, which can be the case with the RSR1 and the inverse RSR1 method. \\
+Interestingly, both RBFGS methods have the same average number of iterations, but the inverse RBFGS method takes less than half the time. This is most likely due to the solving of the system $\mathcal{H}^{RBFGS}_k [\eta_k] = \operatorname{grad} f(x_k)$, which can be (very) costly and occurs in every iteration of the RBFGS method. The same phenomenon can be observed with the RSR1 and the inverse RSR1 method. The inverse RSR1 method even needs slightly more iterations, but less time.

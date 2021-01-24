@@ -16,4 +16,22 @@ holds, where $g_{x_{k+1}}(\cdot, \cdot) \colon \; \tangent{x_{k+1}} \times \tang
 \begin{equation}\label{RiemannianCautiousSR1.2}
     \lvert g_{x_{k+1}}(s_k - \widetilde{\mathcal{B}}^\mathrm{SR1}_k [y_k], y_k) \lvert \; \geq \; r \; \lVert y_k \rVert_{x_{k+1}} \lVert s_k - \widetilde{\mathcal{B}}^\mathrm{SR1}_k [y_k] \rVert_{x_{k+1}} 
 \end{equation}
-is fulfilled. If this is the case, \cref{RiemannianInverseSR1formula} is executed. To get to \cref{RiemannianCautiousSR1.2}, the triple $(\widetilde{\mathcal{H}}^\mathrm{SR1}_k, s_k, y_k)$ in \cref{RiemannianCautiousSR1} was simply replaced by the triple $(\widetilde{\mathcal{B}}^\mathrm{SR1}_k, y_k, s_k)$. We see that by fulfilling \cref{RiemannianCautiousSR1.2} and if $\widetilde{\mathcal{B}}^\mathrm{SR1}_k$ is a positive definite operator, \cref{RiemannianInverseSR1formula} produces a positive definite operator.
+is fulfilled. If this is the case, \cref{RiemannianInverseSR1formula} is executed. To get to \cref{RiemannianCautiousSR1.2}, the triple $(\widetilde{\mathcal{H}}^\mathrm{SR1}_k, s_k, y_k)$ in \cref{RiemannianCautiousSR1} was simply replaced by the triple $(\widetilde{\mathcal{B}}^\mathrm{SR1}_k, y_k, s_k)$. We see that by fulfilling \cref{RiemannianCautiousSR1.2} and if $\widetilde{\mathcal{B}}^\mathrm{SR1}_k$ is a positive definite operator, \cref{RiemannianInverseSR1formula} produces a positive definite operator. \\
+In summary, a Riemannian inverse SR1 quasi-Newton method, short inverse RSR1 method, which uses the approximation of the Hessian inverse ${\operatorname{Hess} f(x_{k+1})}^{-1} [\cdot]$, is as follows:
+\begin{algorithm}[H]
+    \caption{Inverse SR1 Method}\label{RiemannianSR1Method}
+    \begin{algorithmic}[1]
+        \State Continuously differentiable real-valued function $f$ on $\mathcal{M}$, bounded below; initial iterate $x_0 \in \mathcal{M}$; initial positive definite and self-adjoint operator $\mathcal{B}^{\mathrm{SR1}}_0 \colon \; \tangent{x_0} \to \tangent{x_0}$; convergence tolerance $\varepsilon > 0$. Set $k = 0$.
+        \While{$\lVert \nabla f(x_k) \rVert > \varepsilon$}
+            \State Compute the search direction $\eta_k = - \mathcal{B}^{\mathrm{SR1}}_k [\operatorname{grad} f(x_k)]$.
+            \State  Determine a suitable stepsize $\alpha_k > 0$. 
+            \State Set $x_{k+1} = \exponential{x_k} (\alpha_k \eta_k)$.
+            \State Set $\widetilde{\mathcal{B}}^{\mathrm{SR1}}_k = \parallelTransportDir{x_k}{\alpha_k \eta_k} \circ \mathcal{B}^{\mathrm{SR1}}_k \circ {\parallelTransportDir{x_k}{\alpha_k \eta_k}}^{-1}$, $s_k = \parallelTransportDir{x_k}{\alpha_k \eta_k} (\alpha_k \eta_k)$ and 
+            \StatexIndent[2] $y_k = \operatorname{grad} f(x_{k+1}) - \parallelTransportDir{x_k}{\alpha_k \eta_k} (\operatorname{grad} f(x_k))$.
+            \State Compute $\mathcal{B}^{\mathrm{SR1}}_{k+1} \colon \; \tangent{x_{k+1}} \to \tangent{x_{k+1}}$ by means of \cref{RiemannianInverseSR1formula}. 
+            \State Set $k = k+1$.
+        \EndWhile
+        \State \textbf{Return} $x_k$.
+    \end{algorithmic}
+\end{algorithm}
+The statements about the termination of quadratic functions and the generation of good approximations known from the Euclidean case have not yet been transferred to the Riemannian setup. Nevertheless, we can make the bold assumption that this is feasible under reasonable assumptions.  
