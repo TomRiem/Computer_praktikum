@@ -26,7 +26,7 @@ We use the same method and notation for $\widetilde{\mathcal{B}}_k \colon \; \ta
 \begin{equation}\label{directRiemannianBFGSFormula}
     \mathcal{H}^{RBFGS}_{k+1} [\cdot] = \widetilde{\mathcal{H}}^{RBFGS}_k [\cdot] + \frac{y_k y^{\flat}_k[\cdot]}{s^{\flat}_k [y_k]} - \frac{\widetilde{\mathcal{H}}^{RBFGS}_k [s_k] s^{\flat}_k (\widetilde{\mathcal{H}}^{RBFGS}_k [\cdot])}{s^{\flat}_k (\widetilde{\mathcal{H}}^{RBFGS}_k [s_k])}
 \end{equation}
-and the update for the approximation of the Hessian inverse is given by
+and the update for the approximation of the Hessian inverse ${\operatorname{Hess} f(x_{k+1})}^{-1} [\cdot]$ is given by
 \begin{equation}\label{RiemannianInverseBFGSFormula}
         \mathcal{B}^{RBFGS}_{k+1} [\cdot] = \Big{(} \id_{\tangent{x_{k+1}}}[\cdot] - \frac{s_k y^{\flat}_k [\cdot]}{s^{\flat}_k [y_k]} \Big{)} \widetilde{\mathcal{B}}^{RBFGS}_k [\cdot] \Big{(} \id_{\tangent{x_{k+1}}}[\cdot] - \frac{y_k s^{\flat}_k [\cdot]}{s^{\flat}_k [y_k]} \Big{)} + \frac{s_k s^{\flat}_k [\cdot]}{s^{\flat}_k [y_k]}.
 \end{equation}
@@ -34,7 +34,7 @@ These update formulae produce positive definite self-adjoint operators $\mathcal
 \begin{equation}\label{RiemannianCurvatureCondition}
     g_{x_{k+1}}(s_k,y_k) > 0.
 \end{equation}
-In the setup of this work, the Riemannian curvature condition, \cref{RiemannianCurvatureCondition}, is satisfied if a stepsize $\alpha_k > 0$ is chosen that satisfies the following version of the generalization of the Wolfe conditions:
+In the setup of this work, the Riemannian curvature condition, \cref{RiemannianCurvatureCondition}, is satisfied if a stepsize $\alpha_k > 0$ is chosen that fulfills the following version of the generalization of the Wolfe conditions:
 \begin{equation}\label{RiemannianWolfeConditions1}
     f( \exponential{x_k}(\alpha_k \eta_k)) \leq f(x_k) + c_1 \alpha_k g_{x_k} (\operatorname{grad} f(x_k), \eta_k)
 \end{equation}
