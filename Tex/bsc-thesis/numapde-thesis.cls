@@ -94,6 +94,7 @@
 			\vspace{1cm}
 			{\huge\@title{}}\\
 			\vspace{1cm}
+			Computerpraktikum
 		\end{center}
 		\vfill
 		\begin{tabular}[b]{p{0.33\textwidth}l}
